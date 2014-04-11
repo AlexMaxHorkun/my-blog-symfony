@@ -3,10 +3,11 @@ namespace AMH\MyBlogBundle\Entity\Blog;
 
 use AMH\MyBlogBundle\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection as Collection;
 /**
 @author Alexander Horkun mindkilleralexs@gmail.com
 
-@ORM\Entity
+@ORM\Entity(repositoryClass="AMH\MyBLogBunle\Entity\Blog\PostRepository")
 */
 class Post{
 	/**
@@ -37,11 +38,26 @@ class Post{
 	*/
 	protected $author=NULL;
 	/**
+	@var Collection of User.
+	
+	@ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\User\User", mappedBy="postsVisited")
+	@ORM\JoinTable(name="posts_visits")
+	*/
+	protected $visitors;
+	/**
+	@var Collection of Rate.
+	
+	@ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Rate", mappedBy="post")
+	*/
+	protected $rates;
+	/**
 	@param string|null $tt Subject.
 	@param string|null $t Text.
 	@param User|null $u Author.
 	*/
 	public function __construct($tt=NULL,$t=NULL,User $u=NULL){
+		$this->visitors=new Collection();
+		$this->rates=new Collection();
 		if($tt) $this->setTitle($tt);
 	}
 

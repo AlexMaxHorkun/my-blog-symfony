@@ -49,10 +49,24 @@ class User implements UserInterface, \Serializable{
 	@ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Post", mappedBy="author")
 	*/
 	protected $posts;
+	/**
+	@var Collection
+	
+	@ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Post", inversedBy="visitors")
+	*/
+	protected $postsVisited;
+	/**
+	@var Collection
+	
+	@ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Rate", mappedBy="by")
+	*/
+	protected $rates;
 	
 	public function __construct(){
 		$this->posts=new Collection();
 		$this->roles=new Collection();
+		$this->postsVisited=new Collection();
+		$this->rates=new Collection();
 	}
 
     /**
