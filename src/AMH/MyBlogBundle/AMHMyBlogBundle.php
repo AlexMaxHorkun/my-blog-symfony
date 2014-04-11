@@ -1,0 +1,9 @@
+<?php
+
+namespace AMH\MyBlogBundle;
+
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+class AMHMyBlogBundle extends Bundle
+{
+}

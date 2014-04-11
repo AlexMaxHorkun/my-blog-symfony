@@ -1,0 +1,21 @@
+body{
+	width:100%;
+	font-family:serif;
+	font-size:14pt;
+	color:black;
+	margin:0px;
+	padding:0px;
+}
+
+.panel{
+	padding:15px 8px;
+	width:100%;
+	min-height:40px;
+	color:white;
+	font-weight:bold;
+	background-color:#2E5CB8;
+	text-align:center;
+}
+.title{
+	font-size:16pt;
+}

@@ -1,0 +1,4 @@
+amh_my_blog:
+    resource: "@AMHMyBlogBundle/Resources/config/routing.yml"
+    prefix:   /
+

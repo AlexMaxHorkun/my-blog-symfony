@@ -1,0 +1,3 @@
+amh_my_blog_homepage:
+    pattern:  /
+    defaults: { _controller: AMHMyBlogBundle:Default:postsList }
