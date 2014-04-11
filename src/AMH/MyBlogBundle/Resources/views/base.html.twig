@@ -4,13 +4,29 @@
 <link rel="stylesheet" type="text/css" href="{{asset('bundles/amhmyblog/css/my-blog.css')}}">
 {% endblock stylesheets %}
 {% block body %}
-	<div id="header" class="panel"><span class="title">Alexander Horkun's "My Blog(Symfony 2)"</span></div>
+	<div id="header" class="panel">
+		<span class="title" id="title">Alexander Horkun's "My Blog(Symfony 2)"</span>
+		<span id="user">
+		{% if app.user %}
+			<span id="user-signed">
+				<span id="user-name">{{app.user.name}}</span>
+				<a href="{{path('logout')}}">Logout</a>
+			</span>
+			{% else %}
+			<span id="user-signin">
+				<a href="{{path('login')}}">Sign in</a>
+				<a href="{{path('registration')}}">Registration</a>
+			</span>
+			{% endif %}
+		</span>
+	</div>
 	<div id="main-block">
 	<div id="left-block"></div>
 	<div id="content-block">{% block content %}{% endblock content %}</div>
 	</div>
 	<div id="footer" class="panel">
-		<div class="title">A.M. Horkun</div>
+		<div class="title">mindkilleralexs@gmail.com</div>
+		<div><a href="https://github.com/AlexMaxHorkun/my-blog-symfony">https://github.com/AlexMaxHorkun/my-blog-symfony</a></div>
 	</div> 
 {% endblock body %}
 {% block javascripts %}

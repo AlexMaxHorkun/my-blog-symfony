@@ -1,4 +1,13 @@
 amh_my_blog:
     resource: "@AMHMyBlogBundle/Resources/config/routing.yml"
     prefix:   /
-
+login:
+ path: /login
+ defaults: { _controller: AMHMyBlogBundle:Default:login }
+login_check:
+ path: /login-check
+logout:
+ path: /logout
+registration:
+ pattern: /registration
+ defaults: { _controller: AMHMyBlogBundle:Default:registration }

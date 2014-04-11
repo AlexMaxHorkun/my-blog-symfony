@@ -19,3 +19,9 @@ body{
 .title{
 	font-size:16pt;
 }
+.error{
+	width:100%;
+	background-color:#FF0000;
+	color:white;
+	padding:5px 2px;
+}

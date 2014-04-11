@@ -1,0 +1,12 @@
+{% extends 'AMHMyBlogBundle::base.html.twig' %}
+{% block content %}
+	{% if error %}
+	<div class="error">User doesn't exist, email or/and given password is invalid||{{error}}</div>
+	{% endif %}
+	{{ form_start(form) }}
+		{{form_row(form.email)}}
+		{{form_row(form.password)}}
+		{{form_row(form.remember_me)}}
+		{{form_row(form.login)}}
+	{{ form_end(form) }}
+{% endblock content %}

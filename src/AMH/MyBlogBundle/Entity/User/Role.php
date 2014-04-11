@@ -1,0 +1,113 @@
+<?php
+namespace AMH\MyBlogBundle\Entity\User;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection as Collection;
+use Symfony\Component\Security\Core\Role\RoleInterface;
+/**
+@author Alexander Horkun mindkilleralexs@gmail.com
+
+@ORM\Entity
+*/
+class Role implements RoleInterface{
+	/**
+	@var int
+	
+	@ORM\Id
+	@ORM\Column(type="integer")
+	@ORM\GeneratedValue(strategy="AUTO")
+	*/
+	protected $id;
+	/**
+	@var string
+	
+	@ORM\Column(type="string", unique=true)
+	*/
+	protected $role;
+	/**
+	@var Collection
+	
+	@ORM\ManyToMany(targetEntity="User", mappedBy="roles")
+	@ORM\JoinTable(name="user_role")
+	*/
+	protected $users;
+	/**
+	@param string|null $r Role.
+	*/
+	public function __construct($r=NULL){
+		$this->users=new Collection();
+		if($r) $this->setRole($r);
+	}
+	
+	public function getRole(){
+		return $this->role;
+	}
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set role
+     *
+     * @param string $role
+     * @return Role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Add users
+     *
+     * @param \AMH\MyBlogBundle\Entity\User\User $users
+     * @return Role
+     */
+    public function addUser(User $users)
+    {
+        $this->users[] = $users;
+
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param \AMH\MyBlogBundle\Entity\User\User $users
+     */
+    public function removeUser(User $users)
+    {
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+    
+    public function __toString(){
+    	return $this->getRole();
+    }
+    
+    public function serialize(){
+    	return serialize(array($this->id,$this->role));
+    }
+    
+    public function unserialize($data){
+    	list($this->id,$this->role)=unserialize($data);
+    }
+}

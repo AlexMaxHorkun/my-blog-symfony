@@ -1,7 +1,16 @@
 parameters:
-#    amh_my_blog.example.class: AMH\MyBlogBundle\Example
+    amh_my_blog.form.type.user_login.class: AMH\MyBlogBundle\Form\UserLoginType
+    amh_my_blog.form.type.user_registration.class: AMH\MyBlogBundle\Form\UserRegistrationType
 
 services:
-#    amh_my_blog.example:
-#        class: %amh_my_blog.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    amh_my_blog.form.type.user_login:
+        class: %amh_my_blog.form.type.user_login.class%
+        tags:
+         - { name: form.type, alias: user_login }
+    amh_my_blog.form.type.user_registration:
+        class: %amh_my_blog.form.type.user_registration.class%
+        tags:
+         - { name: form.type, alias: user_registration }
+    amh_my_blog.util.entity_generator:
+        class: AMH\MyBlogBundle\Util\EntityGenerator
+        arguments: [ '@doctrine.orm.entity_manager' ]
