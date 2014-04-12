@@ -5,7 +5,7 @@
 {% endblock stylesheets %}
 {% block body %}
 	<div id="header" class="panel">
-		<span class="title" id="title">Alexander Horkun's "My Blog(Symfony 2)"</span>
+		<div><span class="title" id="title">Alexander Horkun's "My Blog(Symfony 2)"</span>
 		<span id="user">
 		{% if app.user %}
 			<span id="user-signed">
@@ -19,7 +19,7 @@
 			</span>
 			{% endif %}
 		</span>
-	</div>
+	</div></div>
 	<div id="main-block">
 	<div id="left-block"></div>
 	<div id="content-block">{% block content %}{% endblock content %}</div>

@@ -12,8 +12,23 @@ class DefaultController extends Controller
 {
     public function postsListAction()
     {
-    	$posts=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post')->findAll();
-        return $this->render('AMHMyBlogBundle:Default:posts-list.html.twig', array('posts'=>$posts));
+    	//$posts=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post')->findAll();
+    	$posts=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post')->averageRating();
+    	$postsData=array();
+    	foreach($posts as $pData){
+    		$postsData[]=array(
+    			'id'=>$pData[0]->getId(),
+    			'title'=>$pData[0]->getTitle(),
+    			'text'=>$pData[0]->getText(),
+    			'author'=>array(
+    				'name'=>$pData[0]->getAuthor()->getName(),
+    				'id'=>$pData[0]->getAuthor()->getId(),
+    			),
+    			'rating'=>$pData[1],
+    			'visits'=>$pData[0]->getVisits()
+    		);
+    	}
+        return $this->render('AMHMyBlogBundle:Default:posts-list.html.twig', array('posts'=>$postsData, 'text_length'=>120));
     }
     
     public function loginAction(){

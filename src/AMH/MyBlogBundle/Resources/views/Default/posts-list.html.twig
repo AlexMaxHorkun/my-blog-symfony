@@ -1,17 +1,28 @@
 {% extends 'AMHMyBlogBundle::base.html.twig' %}
 {% block content %}
-	<ul>
+	{% if posts|length %}
+	<div id="posts_list">
 		{% for post in posts %}
-		<li>
-			<div>"{{post.title}}" by {{post.author}}</div>
-			<div>{{post.text}}</div>
-			<div>
-				Views: {{post.visits}}
-				{% if post.rates|length %}
-				Rates count: {{post.rates|length}}
-				{% endif %}
+		<div name="post" post_id="{{ post.id }}">
+			<div name="title" class="title">{{ post.title }}</div>
+			<div name="info">
+				posted by:
+				{% if app.user and app.user.id==post.author.id %}
+				<span class="accented">YOU</span>
+				{% else %}
+				{{ post.author.name }}
+				{% endif %},
+				views: {{ post.visits }},
+				rating: {{ post.rating|number_format(2,'.') }}
 			</div>
-		</li>
+			<div name="text">
+				<div>{{ post.text|slice(0,text_length) }}</div>
+				...<a href="">Read</a>
+			</div>
+		</div>
 		{% endfor %}
-	</ul>
+	</div>
+	{% else %}
+	<h3>No posts</h3>
+	{% endif %}
 {% endblock content %}
