@@ -7,7 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection as Collection;
 /**
 @author Alexander Horkun mindkilleralexs@gmail.com
 
-@ORM\Entity(repositoryClass="AMH\MyBLogBunle\Entity\Blog\PostRepository")
+@ORM\Entity(repositoryClass="AMH\MyBlogBundle\Entity\Blog\PostRepository")
+@ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="unique_post", columns={"title","author_id"})})
 */
 class Post{
 	/**
@@ -33,7 +34,7 @@ class Post{
 	/**
 	@var User
 	
-	@ORM\ManyToOne(targetEntity="AMH\MyBlogBundle\Entity\user\User", inversedBy="posts")
+	@ORM\ManyToOne(targetEntity="AMH\MyBlogBundle\Entity\User\User", inversedBy="posts")
 	@ORM\JoinColumn(name="author_id")
 	*/
 	protected $author=NULL;
@@ -44,6 +45,14 @@ class Post{
 	@ORM\JoinTable(name="posts_visits")
 	*/
 	protected $visitors;
+	/**
+	I should have created a class Visitation with date, user and post fields, but for simplicity lets leave it like it is.
+	
+	@var int Visits.
+	
+	@ORM\Column(type="integer")
+	*/
+	protected $visits=0;
 	/**
 	@var Collection of Rate.
 	
@@ -151,5 +160,47 @@ class Post{
     public function getId()
     {
         return $this->id;
+    }
+    /**
+    @return array of User.
+    */
+    public function getVisitors(){
+    	return $this->visitors->toArray();
+    }
+    
+    public function addVisitor(User $u){
+    	if(!$this->visitors->contains($u)){
+    		$this->visitors[]=$u;
+    		$this->visits++;
+    	}
+    }
+    /**
+    @return array of Rate.
+    */
+    public function getRates(){
+    	return $this->rates->toArray();
+    }
+    
+    public function addRate(Rate $r){
+    	$this->rates[]=$r;
+    }
+    /**
+    @return int
+    */
+    public function getVisits(){
+    	return $this->visits;
+    }
+    
+    public function addVisit(){
+    	++$this->visits;
+    }
+    /**
+    @param int
+    */
+    public function setVisits($c){
+    	if($c<0){
+    		throw new \InvalidArgumentException('Visits count cannot be less then zero');
+    	}
+    	$this->visits=(int)$c;
     }
 }

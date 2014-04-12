@@ -2,6 +2,7 @@
 namespace AMH\MyBlogBundle\Entity\User;
 
 use AMH\MyBlogBundle\Entity\Blog\Post;
+use AMH\MyBlogBundle\Entity\Blog\Rate;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection as Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -251,5 +252,42 @@ class User implements UserInterface, \Serializable{
     
     public function unserialize($data){
     	list($this->id,$this->email,$this->name,$this->password)=unserialize($data);
+    }
+    
+    public function __toString(){
+    	return $this->getName();
+    }
+    /**
+    @return array of Post.
+    */
+    public function getVisitedPosts(){
+    	return $this->postsVisited->toArray();
+    }
+    
+    public function addVisitedPost(Post $p){
+    	$this->postsVisited[]=$p;
+    }
+    /**
+    @return array of Rate.
+    */
+    public function getRates(){
+    	return $this->rates->toArray();
+    }
+    /**
+    @param float $r Rating.
+    
+    @return Rate
+    */
+    public function ratePost(Post $p,$r){
+    	$rate=new Rate((float)$r,$this,$p);
+    	$this->rates[]=$rate;
+    	return $rate;
+    }
+    
+    public function addRate(Rate $r){
+    	if(!$r->getBy()===$this){
+    		throw new \InvalidArgumentException('Rate given is rated by another user');
+    	}
+    	$this->rates[]=$r;
     }
 }

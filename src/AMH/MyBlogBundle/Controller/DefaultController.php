@@ -12,8 +12,8 @@ class DefaultController extends Controller
 {
     public function postsListAction()
     {
-    	$viewData=array('array'=>array('val1','val2','val3','val4'));
-        return $this->render('AMHMyBlogBundle:Default:posts-list.html.twig', $viewData);
+    	$posts=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post')->findAll();
+        return $this->render('AMHMyBlogBundle:Default:posts-list.html.twig', array('posts'=>$posts));
     }
     
     public function loginAction(){

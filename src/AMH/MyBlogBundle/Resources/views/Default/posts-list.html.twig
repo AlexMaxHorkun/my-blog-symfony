@@ -1,8 +1,17 @@
 {% extends 'AMHMyBlogBundle::base.html.twig' %}
 {% block content %}
 	<ul>
-		{% for val in array %}
-		<li>{{val}}</li>
+		{% for post in posts %}
+		<li>
+			<div>"{{post.title}}" by {{post.author}}</div>
+			<div>{{post.text}}</div>
+			<div>
+				Views: {{post.visits}}
+				{% if post.rates|length %}
+				Rates count: {{post.rates|length}}
+				{% endif %}
+			</div>
+		</li>
 		{% endfor %}
 	</ul>
 {% endblock content %}

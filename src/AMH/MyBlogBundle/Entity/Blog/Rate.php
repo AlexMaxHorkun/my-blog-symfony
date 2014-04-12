@@ -65,4 +65,24 @@ class Rate{
 		$r=(float)$r;
 		$this->rating=$r;
 	}
+	/**
+	@return User
+	*/
+	public function getBy(){
+		return $this->by;
+	}
+	
+	public function setBy(User $b){
+		$this->by=$b;
+	}
+	/**
+	@return Post
+	*/
+	public function getPost(){
+		return $this->post;
+	}
+	
+	public function setPost(Post $p){
+		$this->post=$p;
+	}
 }
