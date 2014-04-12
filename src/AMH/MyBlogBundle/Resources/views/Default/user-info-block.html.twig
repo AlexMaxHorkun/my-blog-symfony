@@ -1,0 +1,12 @@
+<div class="simple-block">
+	<div class="title">User information:</div>
+	{% if user %}
+	<div class="accented">{{ user.name }}</div>
+	<div class="accented">{{ user.email }}</div>
+	<div>Posts written: {{ user.posts_count }}</div>
+	<div>Times viewed posts: {{ user.visited_count }}</div>
+	<div>Rated posts: {{ user.rated_count }}</div>
+	{% else %}
+	<div>Anonymous</div>
+	{% endif %}
+</div>

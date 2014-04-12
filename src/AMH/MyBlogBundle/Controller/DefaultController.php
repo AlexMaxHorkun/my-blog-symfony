@@ -12,7 +12,6 @@ class DefaultController extends Controller
 {
     public function postsListAction()
     {
-    	//$posts=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post')->findAll();
     	$posts=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post')->averageRating();
     	$postsData=array();
     	foreach($posts as $pData){
@@ -29,6 +28,28 @@ class DefaultController extends Controller
     		);
     	}
         return $this->render('AMHMyBlogBundle:Default:posts-list.html.twig', array('posts'=>$postsData, 'text_length'=>120));
+    }
+    
+    public function popularPostsBlockAction(){
+    	$repo=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post');
+    	$mostVisited=$repo->mostVisited(5);
+    	$ratedHighest=$repo->ratedHighest(5);
+    	$ratedHighestData=array();
+    	foreach($ratedHighest as $pData){
+    		$ratedHighestData[]=array(
+    			'id'=>$pData[0]->getId(),
+    			'title'=>$pData[0]->getTitle(),
+    			'rating'=>$pData['ar']
+    		);
+    	}
+    	return $this->render(
+    		'AMHMyBlogBundle:Default:popular-posts-block.html.twig',
+    		array(
+    			'title_length'=>20,
+    			'most_visited'=>$mostVisited,
+    			'rated_highest'=>$ratedHighestData
+    		)
+    	);
     }
     
     public function loginAction(){
@@ -90,6 +111,23 @@ class DefaultController extends Controller
     	return $this->render(
     		'AMHMyBlogBundle:Default:registration.html.twig',
     		$viewData
+    	);
+    }
+    
+    public function userInfoBlockAction(){
+    	$userInfo=array();
+    	$user=$this->getUser();
+    	if($user){
+    		$userInfo['name']=$user->getName();
+    		$userInfo['email']=$user->getEmail();
+    		$userInfo['posts_count']=count($user->getPosts());
+    		$userInfo['visited_count']=count($user->getVisitedPosts());
+    		$userInfo['rated_count']=count($user->getRates());
+    		//$repo=$this->getDoctrine()->getManager()->getRepository('AMHMyBlogBundle:User\User');
+    	}
+    	return $this->render(
+    		'AMHMyBlogBundle:Default:user-info-block.html.twig',
+    		array('user'=>$userInfo)
     	);
     }
 }

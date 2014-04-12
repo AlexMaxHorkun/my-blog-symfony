@@ -15,7 +15,7 @@
 				views: {{ post.visits }},
 				rating: {{ post.rating|number_format(2,'.') }}
 			</div>
-			<div name="text">
+			<div name="text" class="simple-block">
 				<div>{{ post.text|slice(0,text_length) }}</div>
 				...<a href="">Read</a>
 			</div>

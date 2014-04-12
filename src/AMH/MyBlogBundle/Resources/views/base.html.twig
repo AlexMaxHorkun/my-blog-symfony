@@ -21,8 +21,11 @@
 		</span>
 	</div></div>
 	<div id="main-block">
-	<div id="left-block"></div>
-	<div id="content-block">{% block content %}{% endblock content %}</div>
+		<div class="row">
+			<div id="left-block">{% render(controller('AMHMyBlogBundle:Default:popularPostsBlock')) %}</div>
+			<div id="content-block">{% block content %}{% endblock content %}</div>
+			<div id="right-block">{% render(controller('AMHMyBlogBundle:Default:userInfoBlock')) %}</div>
+		</div>
 	</div>
 	<div id="footer" class="panel">
 		<div class="title">mindkilleralexs@gmail.com</div>

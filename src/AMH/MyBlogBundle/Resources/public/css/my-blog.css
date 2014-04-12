@@ -7,6 +7,12 @@ body{
 	padding:0px;
 }
 
+a{
+	color:#2E5CB8;
+	font-style:italic;
+	font-weight:bold;
+}
+
 .panel{
 	padding:15px 0px;
 	width:100%;
@@ -17,10 +23,10 @@ body{
 }
 .panel a{
 	color:white;
-	font-style:italic;
 }
 .title{
 	font-size:16pt;
+	font-weight:bold;
 }
 .error{
 	width:100%;
@@ -28,6 +34,24 @@ body{
 	color:white;
 	padding:5px 2px;
 }
+.row{
+	display:table-row;
+}
+.simple-block{
+	border:5px solid #2E5CB8;
+	padding:4px 6px;
+}
+.simple-block .title{
+	color:#2E5CB8;
+}
+.accented{
+	border:2px solid white;
+	background-color:#2E5CB8;
+	color:white;
+	font-weight:bold;
+	font-size:15pt;
+}
+
 #header{
 	display:table;
 }
@@ -69,19 +93,27 @@ body{
 #posts_list *[name='post'] *[name='info'] .accented{
 	font-size:14pt;
 }
-#posts_list *[name='post'] *[name='text']{
-	border:5px solid #2E5CB8;
-	padding:4px;
-}
+
 #posts_list *[name='post'] *[name='text'] a{
 	background-color:#2E5CB8;
 	color:white;
 	padding:1px;
 }
-.accented{
-	border:2px solid white;
-	background-color:#2E5CB8;
-	color:white;
-	font-weight:bold;
-	font-size:15pt;
+
+#main-block{
+	display:table;
+	width:100%;
+	border-collapse: collapse;
+	vertical-align:top;
+}
+#main-block #left-block{
+	display:table-cell;
+	width:15%;
+}
+#main-block #content{
+	display:table-cell;
+}
+#main-block #right-block{
+	display:table-cell;
+	width:15%;
 }

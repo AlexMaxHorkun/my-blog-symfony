@@ -1,0 +1,26 @@
+<div class="simple-block" id="popular-posts-block">
+	<div class="title">Most viewed:</div>
+	<ul>
+	{% for post in most_visited %}
+	<li>
+		<a href="">
+			{{post.title|slice(0,title_length)}}
+			{% if title_length<post.title|length %}...{% endif %}
+		</a>
+		<br>{{post.visits}} views
+	</li>
+	{% endfor %}
+	</ul>
+	<div class="title">Highest ratings:</div>
+	<ul>
+	{% for post in rated_highest %}
+	<li>
+		<a href="">
+			{{post.title|slice(0,title_length)}}
+			{% if title_length<post.title|length %}...{% endif %}
+		</a>
+		<br>rating: {{post.rating|number_format(2,'.')}}
+	</li>
+	{% endfor %}
+	</ul>
+</div>

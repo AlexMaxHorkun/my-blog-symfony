@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
 @author Alexander Horkun mindkilleralexs@gmail.com
 
-@ORM\Entity
+@ORM\Entity(repositoryClass="AMH\MyBlogBundle\Entity\User\UserRepository")
 */
 class User implements UserInterface, \Serializable{
 	/**
