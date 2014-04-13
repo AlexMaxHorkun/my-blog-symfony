@@ -5,7 +5,7 @@
 {% endblock stylesheets %}
 {% block body %}
 	<div id="header" class="panel">
-		<div><span class="title" id="title">Alexander Horkun's "My Blog(Symfony 2)"</span>
+		<div><span class="title" id="title">Alexander Horkun's <a href="{{ path('amh_my_blog_homepage') }}">"My Blog(Symfony 2)"</a></span>
 		<span id="user">
 		{% if app.user %}
 			<span id="user-signed">

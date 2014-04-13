@@ -27,7 +27,7 @@ class DefaultController extends Controller
     		$page=1;
     		$offset=0;
     	}
-    	$posts=$qb->select('p')->setMaxResults($limit)->setFirstResult($offset)->orderBy('p.createdTime')->getQuery()->getResult();
+    	$posts=$qb->select('p')->setMaxResults($limit)->setFirstResult($offset)->orderBy('p.createdTime','DESC')->getQuery()->getResult();
     	$ratings=$repo->averageRating($posts,TRUE);
     	$postsData=array();
     	foreach($posts as $p){
@@ -167,6 +167,7 @@ class DefaultController extends Controller
     }
     
     public function postViewAction($id){
+    	$ratingFormView=NULL;
     	$repo=$this->getDoctrine()->getManager()->getRepository('AMHMyBlogBundle:Blog\Post');
     	$post=$repo->find($id);
     	if(!$post){
@@ -174,7 +175,22 @@ class DefaultController extends Controller
     	}
     	$user=$this->getUser();
     	if($user){
-    		$post->addVisitor($this->getDoctrine()->getManager()->merge($user));
+    		$user=$this->getDoctrine()->getManager()->merge($user);
+    		$post->addVisitor($user);
+    		$rated=$user->postRate($post);
+    		if(!$rated){
+    			$ratingForm=$this->createForm('post_rating');
+				$ratingForm->add('submit','submit');
+				$ratingForm->handleRequest($this->getRequest());
+				if($ratingForm->isSubmitted() && $ratingForm->isValid()){
+					$user->ratePost($post,$ratingForm->get('rating')->getData());
+					$rated=$ratingForm->get('rating')->getData();
+				}
+				$ratingFormView=$ratingForm->createView();
+			}
+			else{
+				$rated=$rated->getRating();
+			}
     		$this->getDoctrine()->getManager()->flush();
 		}
 		$rating=$repo->averageRating(array($post));
@@ -192,7 +208,7 @@ class DefaultController extends Controller
 		);
 		return $this->render(
 			'AMHMyBlogBundle:Default:post-view.html.twig',
-			array('post'=>$postData)
+			array('post'=>$postData, 'rating_form'=>$ratingFormView ,'rated'=>$rated)
 		);
     }
 }

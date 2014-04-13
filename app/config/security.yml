@@ -38,6 +38,7 @@ security:
                 lifetime: 31536000
                 path: /
                 domain: ~
+                remember_me_parameter: "user_login[remember_me]"
             #http_basic:
             #    realm: "Secured Demo Area"
 

@@ -59,7 +59,7 @@ class User implements UserInterface, \Serializable{
 	/**
 	@var Collection
 	
-	@ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Rate", mappedBy="by")
+	@ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Rate", mappedBy="by", cascade={"persist", "remove"})
 	*/
 	protected $rates;
 	
@@ -289,5 +289,18 @@ class User implements UserInterface, \Serializable{
     		throw new \InvalidArgumentException('Rate given is rated by another user');
     	}
     	$this->rates[]=$r;
+    }
+    /**
+    @return Rate|null Rate object or null if user haven't already rated given post.
+    */
+    public function postRate(Post $p){
+    	$rate=NULL;
+    	foreach($this->rates as $r){
+    		if($r->getPost()===$p && $r->getBy()===$this){
+    			$rate=$r;
+    			break;
+    		}
+    	}
+    	return $rate;
     }
 }

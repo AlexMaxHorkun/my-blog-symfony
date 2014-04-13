@@ -17,6 +17,18 @@
 			<div name="post-text" class="simple-block">
 				{{ post.text }}
 			</div>
+			{% if rating_form and not rated %}
+			<div id="rating_form">
+				{{ form_start(rating_form) }}
+					{{ form_label(rating_form.rating,'Rate this post') }}
+					{{ form_widget(rating_form.rating) }}
+					{{ form_widget(rating_form.submit,{label:'Rate'}) }}
+				{{ form_end(rating_form) }}
+			</div>
+			{% endif %}
+			{% if rated %}
+			<div class="post-info">Already rated by You for "{{rated}}"</div>
+			{% endif %}
 		</div>
 	</div>
 {% endblock content %}

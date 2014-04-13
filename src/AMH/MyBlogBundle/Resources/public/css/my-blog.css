@@ -113,6 +113,12 @@ a{
 	padding:1px;
 }
 
+.post #rating_form{
+	background-color:#2E5CB8;
+	color:white;
+	padding:2px;
+}
+
 #header{
 	display:table;
 }

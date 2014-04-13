@@ -1,6 +1,8 @@
 amh_my_blog_homepage:
     pattern:  /{page}
     defaults: { _controller: AMHMyBlogBundle:Default:postsList, page: 1, user: 0}
+    requirements:
+        page: \d+
 amh_my_blog_users_posts:
     pattern: /posts/user/{user}
     defaults: { _controller: AMHMyBlogBundle:Default:postsList, page: 1}

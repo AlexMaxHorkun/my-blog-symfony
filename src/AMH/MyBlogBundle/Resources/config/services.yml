@@ -20,3 +20,9 @@ services:
          - [setRouter, ["@router"]]
         tags:
          - { name: twig.extension }
+    amh_my_blog.form.type.post_rating:
+        class: AMH\MyBlogBundle\Form\PostRatingType
+        calls:
+         - [setRatingRange, [1,5]]
+        tags:
+         - { name: form.type, alias: post_rating }
