@@ -1,0 +1,21 @@
+{% extends 'AMHMyBlogBundle::base.html.twig' %}
+{% block content %}
+	<div id="post-add">
+		<h2 class="blue-color">Write a new post</h2>
+		{{ form_start(form) }}
+			<div class="post">
+				<div class="post-title">
+					{{ form_label(form.title,'Title') }}
+					{{ form_widget(form.title) }}
+					{{ form_errors(form.title) }}
+				</div>
+				<div class="post-text">
+					{{ form_label(form.text,'Text') }}
+					{{ form_widget(form.text) }}
+					{{ form_errors(form.text) }}
+				</div>
+				<div class="post-info">{{ form_widget(form.submit,{label: 'Post'}) }}</div>
+			</div>
+		{{ form_end(form) }}
+	</div>
+{% endblock content %}

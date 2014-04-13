@@ -26,3 +26,11 @@ services:
          - [setRatingRange, [1,5]]
         tags:
          - { name: form.type, alias: post_rating }
+    amh_my_blog.default.controller:
+        class: AMH\MyBlogBUndle\Controller\DefaultController
+        tags:
+         - { name: security.scure_service }
+    amh_my_blog.form.type.post:
+        class: AMH\MyBlogBundle\Form\PostType
+        tags:
+         - { name: form.type, alias: post_add }

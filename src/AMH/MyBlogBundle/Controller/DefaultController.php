@@ -4,8 +4,10 @@ namespace AMH\MyBlogBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AMH\MyBlogBundle\Entity\User\User;
+use AMH\MyBlogBundle\Entity\Blog\Post;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Response;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
 @author Alexander Horkun mindkilleralexs@gmail.com
 */
@@ -210,5 +212,26 @@ class DefaultController extends Controller
 			'AMHMyBlogBundle:Default:post-view.html.twig',
 			array('post'=>$postData, 'rating_form'=>$ratingFormView ,'rated'=>$rated)
 		);
+    }
+    /**
+    @Secure(roles="ROLE_USER")
+    */
+    public function postAddAction(){
+    	$user=$this->getUser();
+    	$post=new Post();
+    	$post->setAuthor($user);
+    	$form=$this->createForm('post_add',$post);
+    	$form->add('submit','submit');
+    	$form->handleRequest($this->getRequest());
+    	if($form->isSubmitted() && $form->isValid()){
+    		$em=$this->getDoctrine()->getManager();
+    		$em->persist($post);
+    		$em->flush();
+    		return $this->redirect($this->generateUrl('amh_my_blog_post',array('id'=>$post->getId())));
+    	}
+    	return $this->render(
+    		'AMHMyBlogBundle:Default:post-add.html.twig',
+    		array('form'=>$form->createView())
+    	);
     }
 }

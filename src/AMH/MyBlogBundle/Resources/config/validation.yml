@@ -15,3 +15,12 @@ AMH\MyBlogBundle\Entity\User\User:
    - NotBlank: { groups: [registration] }
    - Length: { min: 3, max: 100, groups: [registration] }
    - Regex: { pattern: "/^[a-z]+[\w\s]*?$/i", groups: [registration] }
+AMH\MyBlogBundle\Entity\Blog\Post:
+ properties:
+  title:
+   - NotBlank: ~
+   - Regex: { pattern: "/^[a-z]+[\w\s]*?$/i" }
+   - Length: { min: 5, max: 60 }
+  text:
+   - NotBlank: ~
+   - Length: { min: 10, max: 2000 }

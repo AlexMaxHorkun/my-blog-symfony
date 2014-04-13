@@ -12,7 +12,9 @@ a{
 	font-style:italic;
 	font-weight:bold;
 }
-
+.blue-color{
+	color:#2E5CB8;
+}
 .panel{
 	padding:15px 0px;
 	width:100%;
@@ -161,4 +163,7 @@ a{
 #main-block #pagination{
 	width:100%;
 	text-align:center;
+}
+#post-add{
+	padding:4px 10px;
 }
