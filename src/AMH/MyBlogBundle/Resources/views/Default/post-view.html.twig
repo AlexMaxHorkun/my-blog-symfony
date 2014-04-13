@@ -1,9 +1,7 @@
 {% extends 'AMHMyBlogBundle::base.html.twig' %}
 {% block content %}
-	{% if posts|length %}
-	<div id="posts_list">
-		{% for post in posts %}
-		<div class="post" post_id="{{ post.id }}">
+	<div id="post" post_id="{{ post.id }}">
+		<div class="post">
 			<div class="post-title title">{{ post.title }}</div>
 			<div class="post-info">
 				posted: {{ post.created|date('d.m.Y H:i:s') }} |
@@ -16,17 +14,9 @@
 				views: {{ post.visits }} |
 				rating: {{ post.rating|number_format(2,'.') }}
 			</div>
-			<div class="post-text" class="simple-block">
-				<div>{{ post.text|slice(0,text_length) }}</div>
-				...<a href="{{ path('amh_my_blog_post',{ id: post.id}) }}">Read</a>
+			<div name="post-text" class="simple-block">
+				{{ post.text }}
 			</div>
 		</div>
-		{% endfor %}
-		<div id="pagination">
-			{{ pagination(page, page_count,3,'amh_my_blog_homepage') }}
-		</div>
 	</div>
-	{% else %}
-	<h3>No posts</h3>
-	{% endif %}
 {% endblock content %}

@@ -1,3 +1,9 @@
 amh_my_blog_homepage:
     pattern:  /{page}
+    defaults: { _controller: AMHMyBlogBundle:Default:postsList, page: 1, user: 0}
+amh_my_blog_users_posts:
+    pattern: /posts/user/{user}
     defaults: { _controller: AMHMyBlogBundle:Default:postsList, page: 1}
+amh_my_blog_post:
+    pattern: /post/{id}
+    defaults: { _controller: AMHMyBlogBundle:Default:postView }

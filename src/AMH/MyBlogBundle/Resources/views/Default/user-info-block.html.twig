@@ -3,7 +3,7 @@
 	{% if user %}
 	<div class="accented">{{ user.name }}</div>
 	<div class="accented">{{ user.email }}</div>
-	<div>Posts written: {{ user.posts_count }}</div>
+	<div>Posts written: {{ user.posts_count }} <a href="{{ path('amh_my_blog_users_posts',{ user: user.id}) }}">View</a></div>
 	<div>Times viewed posts: {{ user.visited_count }}</div>
 	<div>Rated posts: {{ user.rated_count }}</div>
 	{% else %}

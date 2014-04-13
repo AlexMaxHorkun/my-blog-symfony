@@ -53,7 +53,7 @@ class User implements UserInterface, \Serializable{
 	/**
 	@var Collection
 	
-	@ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Post", inversedBy="visitors")
+	@ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Post", mappedBy="visitors")
 	*/
 	protected $postsVisited;
 	/**

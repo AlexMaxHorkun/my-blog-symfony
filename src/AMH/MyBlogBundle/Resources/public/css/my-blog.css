@@ -82,6 +82,36 @@ a{
 	background-color:#2E5CB8;
 	color:white !important;
 }
+.post{
+	width:98%;
+	margin:10px 1%;
+}
+.post-title{
+	background-color:#2E5CB8;
+	color:white;
+	font-size:16pt;
+	padding:2px;
+}
+.post-info{
+	background-color:#2E5CB8;
+	color:white;
+	font-size:13pt;
+	padding:1px;
+}
+.post .post-info .accented{
+	font-size:14pt;
+}
+.post .post-text{
+	background-color:white;
+	color:black;
+	border:5px solid #2E5CB8;
+	padding: 5px 10px;
+}
+.post .post-text a{
+	background-color:#2E5CB8;
+	color:white;
+	padding:1px;
+}
 
 #header{
 	display:table;
@@ -103,32 +133,6 @@ a{
 
 #footer{
 	text-align:center;
-}
-
-#posts_list *[name='post']{
-	width:98%;
-	margin:10px 1%;
-}
-#posts_list *[name='post'] *[name='title']{
-	background-color:#2E5CB8;
-	color:white;
-	font-size:16pt;
-	padding:2px;
-}
-#posts_list *[name='post'] *[name='info']{
-	background-color:#2E5CB8;
-	color:white;
-	font-size:13pt;
-	padding:1px;
-}
-#posts_list *[name='post'] *[name='info'] .accented{
-	font-size:14pt;
-}
-
-#posts_list *[name='post'] *[name='text'] a{
-	background-color:#2E5CB8;
-	color:white;
-	padding:1px;
 }
 
 #main-block{

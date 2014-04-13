@@ -5,16 +5,21 @@ namespace AMH\MyBlogBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AMH\MyBlogBundle\Entity\User\User;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\HttpFoundation\Response;
 /**
 @author Alexander Horkun mindkilleralexs@gmail.com
 */
 class DefaultController extends Controller
 {
-    public function postsListAction($page=1)
+    public function postsListAction($page=1, $user)
     {
     	$limit=5;
+    	if($user){
+    		$user=$this->getDoctrine()->getManager()->find('AMHMyBlogBundle:User\User',(int)$user);
+    	}
     	$repo=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post');
     	$qb=$repo->createQueryBuilder('p')->select('count(p)');
+    	if($user){ $qb->where($qb->expr()->eq('p.author',$user->getId())); }
     	$postCount=$qb->getQuery()->getResult();
     	$postCount=(int)$postCount[0][1];
     	$offset=($page-1)*$limit;
@@ -147,6 +152,7 @@ class DefaultController extends Controller
     	$userInfo=array();
     	$user=$this->getUser();
     	if($user){
+    		$userInfo['id']=$user->getId();
     		$userInfo['name']=$user->getName();
     		$userInfo['email']=$user->getEmail();
     		$userInfo['posts_count']=count($user->getPosts());
@@ -158,5 +164,35 @@ class DefaultController extends Controller
     		'AMHMyBlogBundle:Default:user-info-block.html.twig',
     		array('user'=>$userInfo)
     	);
+    }
+    
+    public function postViewAction($id){
+    	$repo=$this->getDoctrine()->getManager()->getRepository('AMHMyBlogBundle:Blog\Post');
+    	$post=$repo->find($id);
+    	if(!$post){
+    		return new Response(null,Response::HTTP_NOT_FOUND);
+    	}
+    	$user=$this->getUser();
+    	if($user){
+    		$post->addVisitor($this->getDoctrine()->getManager()->merge($user));
+    		$this->getDoctrine()->getManager()->flush();
+		}
+		$rating=$repo->averageRating(array($post));
+		$postData=array(
+			'id'=>$post->getId(),
+			'title'=>$post->getTitle(),
+			'text'=>$post->getText(),
+			'author'=>array(
+				'id'=>$post->getAuthor()->getId(),
+				'name'=>$post->getAuthor()->getName(),
+			),
+			'rating'=>$rating[0]['rating'],
+			'visits'=>$post->getVisits(),
+			'created'=>$post->createdTime()
+		);
+		return $this->render(
+			'AMHMyBlogBundle:Default:post-view.html.twig',
+			array('post'=>$postData)
+		);
     }
 }

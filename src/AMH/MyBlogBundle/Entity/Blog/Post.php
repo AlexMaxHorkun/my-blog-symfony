@@ -47,8 +47,7 @@ class Post{
 	/**
 	@var Collection of User.
 	
-	@ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\User\User", mappedBy="postsVisited")
-	@ORM\JoinTable(name="posts_visits")
+	@ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\User\User", inversedBy="postsVisited")
 	*/
 	protected $visitors;
 	/**
@@ -178,8 +177,8 @@ class Post{
     public function addVisitor(User $u){
     	if(!$this->visitors->contains($u)){
     		$this->visitors[]=$u;
-    		$this->visits++;
     	}
+    	$this->visits++;
     }
     /**
     @return array of Rate.

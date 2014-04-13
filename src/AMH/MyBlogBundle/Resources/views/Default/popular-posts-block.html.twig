@@ -3,7 +3,7 @@
 	<ul>
 	{% for post in most_visited %}
 	<li>
-		<a href="">
+		<a href="{{ path('amh_my_blog_post',{ id: post.id}) }}">
 			{{post.title|slice(0,title_length)}}
 			{% if title_length<post.title|length %}...{% endif %}
 		</a>
@@ -15,7 +15,7 @@
 	<ul>
 	{% for post in rated_highest %}
 	<li>
-		<a href="">
+		<a href="{{ path('amh_my_blog_post',{ id: post.id}) }}">
 			{{post.title|slice(0,title_length)}}
 			{% if title_length<post.title|length %}...{% endif %}
 		</a>
