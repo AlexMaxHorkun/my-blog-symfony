@@ -1,0 +1,32 @@
+<?php
+namespace AMH\MyBlogBundle\Command;
+
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+/**
+@author Alexander Horkun mindkilleralexs@gmail.com
+*/
+class InstallRolesCommand extends ContainerAwareCommand{
+	protected function configure(){
+		$this->setName('amh:myblog:install:roles')
+			->setDescription('Create roles based on security config');
+	}
+	
+	protected function execute(InputInterface $input, OutputInterface $output){
+		$generator=$this->getContainer()->get('amh_my_blog.util.entity_generator');
+		$roles=array(
+			'ROLE_USER',
+			'ROLE_ADMIN'
+		);
+		$persisted=$generator->createRoles($roles);
+		$output->writeln('Persisted roles:');
+		foreach($persisted as $role){
+			$output->writeln($role.' #'.$role->getId());
+		}
+	}
+}
+?>
+
