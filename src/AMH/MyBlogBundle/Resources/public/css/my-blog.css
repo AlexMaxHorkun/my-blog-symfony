@@ -51,6 +51,37 @@ a{
 	font-weight:bold;
 	font-size:15pt;
 }
+.pagination{
+	background-color:white;
+	font-size:15pt;
+	font-style:none;
+	margin: 5px;
+}
+.pagination .page{
+	background-color:#2E5CB8;
+	margin:0px 2px;
+	display:inline-block;
+	width:30px;
+	height:30px;
+	text-align:center;
+	vertical-align:middle;
+	cursor:pointer;
+	border:2px solid #2E5CB8;
+	color:white !important;
+	text-decoration:none;
+}
+.pagination .page:hover{
+	background-color:white;
+	color:#2E5CB8 !important;
+}
+.pagination .active-page{
+	background-color:white;
+	color:#2E5CB8 !important;
+}
+.pagination .active-page:hover{
+	background-color:#2E5CB8;
+	color:white !important;
+}
 
 #header{
 	display:table;
@@ -116,4 +147,8 @@ a{
 #main-block #right-block{
 	display:table-cell;
 	width:15%;
+}
+#main-block #pagination{
+	width:100%;
+	text-align:center;
 }

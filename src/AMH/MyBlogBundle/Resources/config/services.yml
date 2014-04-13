@@ -14,3 +14,9 @@ services:
     amh_my_blog.util.entity_generator:
         class: AMH\MyBlogBundle\Util\EntityGenerator
         arguments: [ '@doctrine.orm.entity_manager' ]
+    amh_my_blog.twig.extension:
+        class: AMH\MyBlogBundle\Twig\AMHExtension
+        calls:
+         - [setRouter, ["@router"]]
+        tags:
+         - { name: twig.extension }

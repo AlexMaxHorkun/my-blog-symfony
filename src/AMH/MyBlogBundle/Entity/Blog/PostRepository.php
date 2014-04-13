@@ -5,18 +5,35 @@ namespace AMH\MyBlogBundle\Entity\Blog;
 */
 class PostRepository extends \Doctrine\ORM\EntityRepository{
 	/**
-	@param Post|null If post entity given will return it's average rating, if null given will return all-posts : ave-rating array.
+	@param array|null $posts Array of IDs or Post objects, if given average ratings will be selected only for them.
+	@param bool|null $selectIds If true resulting array will contain IDs not entities, false by default.
 	
-	@return array
+	@return array Of arrays with keys 'post' and 'rating'.
 	*/
-	public function averageRating(Post $p=NULL){
-		if($p && !$p->getId()){
-			throw new\InvalidArgumentException('Post argument must have ID');
+	public function averageRating($posts=array(),$selectIds=FALSE){
+		foreach($posts as $key=>$p){
+			if($p instanceof Post){
+				if($p->getId()){
+					$posts[$key]=$p->getId();
+				}
+				else{
+					unset($posts[$key]);
+				}
+			}
+			else{
+				$posts[$key]=(int)$p;
+			}
 		}
 		$qb=$this->createQueryBuilder('p');
-		$qb->select('p,avg(r.rating)')->leftJoin('p.rates','r')->groupBy('r.post');
-		if($p){
-			$qb->where($qb->expr()->eq('r.post',$p->getId()));
+		if($selectIds){
+			$qb->select('p.id as post,avg(r.rating) as rating');
+		}
+		else{
+			$qb->select('p as post,avg(r.rating) as rating');
+		}
+		$qb->leftJoin('p.rates','r')->groupBy('p');
+		if($posts){
+			$qb->where($qb->expr()->in('p.id',$posts));
 		}
 		return $qb->getQuery()->getResult();
 	}

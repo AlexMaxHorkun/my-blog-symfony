@@ -39,6 +39,12 @@ class Post{
 	*/
 	protected $author=NULL;
 	/**
+	@var \DateTime
+	
+	@ORM\Column(type="datetime")
+	*/
+	protected $createdTime;
+	/**
 	@var Collection of User.
 	
 	@ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\User\User", mappedBy="postsVisited")
@@ -67,6 +73,7 @@ class Post{
 	public function __construct($tt=NULL,$t=NULL,User $u=NULL){
 		$this->visitors=new Collection();
 		$this->rates=new Collection();
+		$this->createdTime=new \DateTime();
 		if($tt) $this->setTitle($tt);
 	}
 
@@ -202,5 +209,11 @@ class Post{
     		throw new \InvalidArgumentException('Visits count cannot be less then zero');
     	}
     	$this->visits=(int)$c;
+    }
+    /**
+    @return \DateTime
+    */
+    public function createdTime(){
+    	return $this->createdTime;
     }
 }

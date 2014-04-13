@@ -6,13 +6,14 @@
 		<div name="post" post_id="{{ post.id }}">
 			<div name="title" class="title">{{ post.title }}</div>
 			<div name="info">
+				posted: {{ post.created|date('d.m.Y H:i:s') }} |
 				posted by:
 				{% if app.user and app.user.id==post.author.id %}
 				<span class="accented">YOU</span>
 				{% else %}
 				{{ post.author.name }}
-				{% endif %},
-				views: {{ post.visits }},
+				{% endif %} |
+				views: {{ post.visits }} |
 				rating: {{ post.rating|number_format(2,'.') }}
 			</div>
 			<div name="text" class="simple-block">
@@ -21,6 +22,9 @@
 			</div>
 		</div>
 		{% endfor %}
+		<div id="pagination">
+			{{ pagination(page, page_count,3,'amh_my_blog_homepage') }}
+		</div>
 	</div>
 	{% else %}
 	<h3>No posts</h3>

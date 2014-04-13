@@ -56,10 +56,13 @@ class EntityGenerator{
 		}
 		$highestId=$this->getEntityManager()->getRepository('AMHMyBlogBundle:User\User')
 			->createQueryBuilder('u')->select('max(u.id)')->getQuery()->getResult();
-		if(isset($highestId[0][1])) $highestId=(int)$highestId[0][1];		
-		if($highestId<0) $highestId=0;
+		if(isset($highestId[0])){
+			$highestId=(int)$highestId[0][1];
+		}
+		if(!$highestId) $highestId=0;
 		$users=array();
-		for($i=($highestId+1),$count=$highestId+$c;$i<=$count;$i++){
+		
+		for($i=($highestId+1),$count=($highestId+$c);$i<=$count;$i++){
 			$user=new User();
 			$user->setEmail('testuser'.$i.'@domain.com');
 			$user->setName('Test User '.$i);
@@ -84,9 +87,9 @@ class EntityGenerator{
 		$users=$this->getEntityManager()->getRepository('AMH\MyBlogBundle\Entity\User\User')->findAll();
 		$highestId=$this->getEntityManager()->getRepository('AMHMyBlogBundle:Blog\Post')
 			->createQueryBuilder('p')->select('max(p.id)')->getQuery()->getResult();
-		if(isset($highestId[0][1])) $highestId=(int)$highestId[0][1];		
+		if(isset($highestId[0])) $highestId=(int)$highestId[0][1];		
 		if($highestId<0) $highestId=0;
-		for($i=$highestId,$count=$c+$i;$i<=$count;$i++){
+		for($i=$highestId+1,$count=$c+$i;$i<$count;$i++){
 			$post=new Post();
 			$post->setTitle(((rand(0,1))? 'Some useless post':'Whining about something').' #'.$i);
 			$post->setText('Generated text...end.');

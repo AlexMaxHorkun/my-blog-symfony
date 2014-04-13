@@ -10,24 +10,53 @@ use Symfony\Component\Security\Core\SecurityContext;
 */
 class DefaultController extends Controller
 {
-    public function postsListAction()
+    public function postsListAction($page=1)
     {
-    	$posts=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post')->averageRating();
-    	$postsData=array();
-    	foreach($posts as $pData){
-    		$postsData[]=array(
-    			'id'=>$pData[0]->getId(),
-    			'title'=>$pData[0]->getTitle(),
-    			'text'=>$pData[0]->getText(),
-    			'author'=>array(
-    				'name'=>$pData[0]->getAuthor()->getName(),
-    				'id'=>$pData[0]->getAuthor()->getId(),
-    			),
-    			'rating'=>$pData[1],
-    			'visits'=>$pData[0]->getVisits()
-    		);
+    	$limit=5;
+    	$repo=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post');
+    	$qb=$repo->createQueryBuilder('p')->select('count(p)');
+    	$postCount=$qb->getQuery()->getResult();
+    	$postCount=(int)$postCount[0][1];
+    	$offset=($page-1)*$limit;
+    	if($offset>$postCount){
+    		$page=1;
+    		$offset=0;
     	}
-        return $this->render('AMHMyBlogBundle:Default:posts-list.html.twig', array('posts'=>$postsData, 'text_length'=>120));
+    	$posts=$qb->select('p')->setMaxResults($limit)->setFirstResult($offset)->orderBy('p.createdTime')->getQuery()->getResult();
+    	$ratings=$repo->averageRating($posts,TRUE);
+    	$postsData=array();
+    	foreach($posts as $p){
+    		$postData=array(
+    			'id'=>$p->getId(),
+    			'title'=>$p->getTitle(),
+    			'text'=>$p->getText(),
+    			'author'=>array(
+    				'name'=>$p->getAuthor()->getName(),
+    				'id'=>$p->getAuthor()->getId(),
+    			),
+    			'visits'=>$p->getVisits(),
+    			'created'=>$p->createdTime(),
+    			'rating'=>0,
+    		);
+    		foreach($ratings as $rating){
+    			if($rating['post']==$p->getId()){
+    				$postData['rating']=$rating['rating'];
+    				break;
+    			}
+    		}
+    		$postsData[]=$postData;
+    	}
+    	$pageCount=(int)($postCount/$limit);
+    	if($postCount % $limit) $pageCount++;
+        return $this->render(
+        	'AMHMyBlogBundle:Default:posts-list.html.twig',
+        	array(
+        		'posts'=>$postsData,
+        		'text_length'=>120,
+        		'page'=>$page,
+        		'page_count'=>$pageCount
+        	)
+        );
     }
     
     public function popularPostsBlockAction(){
