@@ -42,6 +42,7 @@ a{
 .simple-block{
 	border:5px solid #2E5CB8;
 	padding:4px 6px;
+	background-color:white;
 }
 .simple-block .title{
 	color:#2E5CB8;
@@ -166,4 +167,12 @@ a{
 }
 #post-add{
 	padding:4px 10px;
+}
+#post #rated-by{
+	text-decoration:underline;
+	cursor:pointer;
+	font-weight:bold;
+}
+#post #rated-by-block{
+	position:absolute;
 }

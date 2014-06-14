@@ -176,6 +176,7 @@ class DefaultController extends Controller
     		return new Response(null,Response::HTTP_NOT_FOUND);
     	}
     	$user=$this->getUser();
+    	$rated=FALSE;
     	if($user){
     		$user=$this->getDoctrine()->getManager()->merge($user);
     		$post->addVisitor($user);
@@ -206,7 +207,8 @@ class DefaultController extends Controller
 			),
 			'rating'=>$rating[0]['rating'],
 			'visits'=>$post->getVisits(),
-			'created'=>$post->createdTime()
+			'created'=>$post->createdTime(),
+			'is_rated'=>(bool)count($post->getRates())
 		);
 		return $this->render(
 			'AMHMyBlogBundle:Default:post-view.html.twig',
@@ -233,5 +235,13 @@ class DefaultController extends Controller
     		'AMHMyBlogBundle:Default:post-add.html.twig',
     		array('form'=>$form->createView())
     	);
+    }
+    
+    public function postRatedByAction(Post $post){
+    	$ratingRepo=$this->get('doctrine')->getManager()->getRepository('AMHMyBlogBundle:Blog\Rate');
+    	$limit=10;
+    	$ratedBy=$ratingRepo->findBy(array('post'=>$post),array('id'=>'DESC'),$limit);
+    
+    	return $this->render('AMHMyBlogBundle:Default:rated-by.html.twig',array('ratedBy'=>$ratedBy));
     }
 }

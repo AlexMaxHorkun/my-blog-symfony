@@ -1,0 +1,15 @@
+{% extends 'AMHMyBlogBundle::base.html.twig' %}
+{% block body %}
+	<div class="simple-block">
+		{% if ratedBy|length > 0 %}
+		<div class="title">Last {{ ratedBy|length }} people who rated</div>
+		<ul>
+			{% for rating in ratedBy  %}
+				<li>{{ rating.by }} - {{ rating.rating }}</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<div class="title">Is not yet rated</div>
+		{% endif %}
+	</div>
+{% endblock body %}

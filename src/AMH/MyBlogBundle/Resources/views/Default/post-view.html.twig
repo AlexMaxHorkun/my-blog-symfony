@@ -13,6 +13,9 @@
 				{% endif %} |
 				views: {{ post.visits }} |
 				rating: {{ post.rating|number_format(2,'.') }}
+				{% if post.is_rated %}
+				<span id="rated-by" title="Show users who rated this post">rated by</span>
+				{% endif %}
 			</div>
 			<div name="post-text" class="simple-block">
 				{{ post.text }}
@@ -30,5 +33,42 @@
 			<div class="post-info">Already rated by You for "{{rated}}"</div>
 			{% endif %}
 		</div>
+		<div id="rated-by-block"></div>
 	</div>
 {% endblock content %}
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		function showRatedBy(){
+			var $block=jQuery("#rated-by-block");
+			var $button=jQuery("#rated-by");
+			$block.css("left",$button.position().left+$button.width());
+			$block.css("top",$button.position().top);
+			$block.css("display","block");
+		}
+		function hideRatedBy(){
+			var $block=jQuery("#rated-by-block");
+			$block.css("display","none");
+		}
+		var ratedByURL="{{ path('amh_my_blog_post_rated_by',{ post: post.id }) }}";
+		var ratedByHtml="";
+		jQuery("#rated-by").on("click",function(e){
+			var $ratedBy=jQuery("#rated-by-block");
+			if(!$ratedBy.html()){
+				jQuery.get(ratedByURL,function(res){
+					ratedByHtml=new String(res);
+					$ratedBy.html(ratedByHtml);
+					showRatedBy();
+				},'html');
+			}
+			else{
+				if($ratedBy.css("display")=="none"){
+					showRatedBy();
+				}
+				else{
+					hideRatedBy();
+				}
+			}
+		});
+	</script>
+{% endblock javascripts %}
