@@ -49,7 +49,10 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
 		}
 		$qb=$this->createQueryBuilder('p');
 		$qb->select('p')->orderBy('p.visits','DESC')->setMaxResults($c);
-		return $qb->getQuery()->getResult();
+		$query=$qb->getQuery();
+		$query->useResultCache(TRUE,300,'most_visited_posts');
+		$result=$query->getResult();
+		return $result;
 	}
 	/**
 	@param int $c Limit.
@@ -63,7 +66,10 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
 		}
 		$qb=$this->createQueryBuilder('p');
 		$qb->select('p,avg(r.rating) as ar')->leftJoin('p.rates','r')->groupBy('r.post')->orderBy('ar','DESC')->setMaxResults($c);
-		return $qb->getQuery()->getResult();
+		$query=$qb->getQuery();
+		$query->useResultCache(TRUE,300,'rated_highest_posts');
+		$result=$query->getResult();
+		return $result;
 	}
 }
 ?>

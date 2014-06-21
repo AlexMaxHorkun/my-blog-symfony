@@ -34,3 +34,15 @@ services:
         class: AMH\MyBlogBundle\Form\PostType
         tags:
          - { name: form.type, alias: post_add }
+    amh_my_blog_cache_factory:
+        class: AMH\MyBlogBundle\Util\CacheFactory
+    amh_my_blog_cache:
+        class: Memcache
+        factory_service: amh_my_blog_cache_factory
+        factory_method: createMemcached
+    amh_my_blog_doctrine_cache:
+        class: Doctrine\Common\Cache\Cache
+        factory_service: amh_my_blog_cache_factory
+        factory_method: createDoctrineCache
+        arguments: [ "@amh_my_blog_cache" ]
+        
