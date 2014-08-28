@@ -46,3 +46,7 @@ services:
         factory_method: createDoctrineCache
         arguments: [ "@amh_my_blog_cache" ]
         
+    kernel.listener.geo_subdomain_listener:
+            class: AMH\MyBlogBundle\Event\GeoSubdomainEventListener
+            tags:
+                - { name: kernel.event_listener, event: kernel.request, method: onRequest }

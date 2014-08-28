@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new JMS\AopBundle\JMSAopBundle(),
    			new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
     		new JMS\DiExtraBundle\JMSDiExtraBundle($this),
+    		new IAkumaI\SphinxsearchBundle\SphinxsearchBundle($this),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

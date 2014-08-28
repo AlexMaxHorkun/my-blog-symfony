@@ -29,7 +29,16 @@ class DefaultController extends Controller
     		$page=1;
     		$offset=0;
     	}
-    	$posts=$qb->select('p')->setMaxResults($limit)->setFirstResult($offset)->orderBy('p.createdTime','DESC')->getQuery()->getResult();
+    	$posts=array();
+    	if($this->getRequest()->query->has('search')){
+    		$sphix=$this->get('iakumai.sphinxsearch.search');
+    		$postsFound=$sphix->search($this->getRequest()->query->get('search'),array('amhmyblog_post'));
+    		print_r(array_keys($postsFound));
+    		die();
+    	}
+    	else{
+			$posts=$qb->select('p')->setMaxResults($limit)->setFirstResult($offset)->orderBy('p.createdTime','DESC')->getQuery()->getResult();
+    	}
     	$ratings=$repo->averageRating($posts,TRUE);
     	$postsData=array();
     	foreach($posts as $p){
@@ -69,7 +78,13 @@ class DefaultController extends Controller
     public function popularPostsBlockAction(){
     	$repo=$this->getDoctrine()->getManager()->getRepository('AMH\MyBlogBundle\Entity\Blog\Post');
     	$mostVisited=$repo->mostVisited(5);
-    	$ratedHighest=$repo->ratedHighest(5);
+    	/** @var \Memcache */
+    	$cache=$this->get('amh_my_blog_cache');
+    	$ratedHighest=unserialize($cache->get('amh_my_blog_rated_highest_posts'));
+    	if(!$ratedHighest){
+    		$ratedHighest=$repo->ratedHighest(5);
+    		$cache->set('amh_my_blog_rated_highest_posts',serialize($ratedHighest),0,60*5);
+    	}
     	$ratedHighestData=array();
     	foreach($ratedHighest as $pData){
     		$ratedHighestData[]=array(

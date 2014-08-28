@@ -38,6 +38,8 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
 		return $qb->getQuery()->getResult();
 	}
 	/**
+	Using doctrine cache for this.
+	
 	@param int $c Limit.
 	
 	@return array of Post.
@@ -55,6 +57,8 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
 		return $result;
 	}
 	/**
+	Using memcache for this one in the controller.
+	
 	@param int $c Limit.
 	
 	@return array of Post.
@@ -67,7 +71,6 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
 		$qb=$this->createQueryBuilder('p');
 		$qb->select('p,avg(r.rating) as ar')->leftJoin('p.rates','r')->groupBy('r.post')->orderBy('ar','DESC')->setMaxResults($c);
 		$query=$qb->getQuery();
-		$query->useResultCache(TRUE,300,'rated_highest_posts');
 		$result=$query->getResult();
 		return $result;
 	}
