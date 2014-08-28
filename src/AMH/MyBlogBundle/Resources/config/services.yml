@@ -45,8 +45,14 @@ services:
         factory_service: amh_my_blog_cache_factory
         factory_method: createDoctrineCache
         arguments: [ "@amh_my_blog_cache" ]
+
+    amh_my_blog.geo_detector:
+        class: AMH\MyBlogBundle\Util\GeoDetector
         
     kernel.listener.geo_subdomain_listener:
             class: AMH\MyBlogBundle\Event\GeoSubdomainEventListener
+            arguments:
+                - "@amh_my_blog.geo_detector"
+                - "@router"
             tags:
                 - { name: kernel.event_listener, event: kernel.request, method: onRequest }
