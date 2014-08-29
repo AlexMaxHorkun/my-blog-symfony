@@ -18,6 +18,7 @@ class Milestone {
      * @var int
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", name="id")
      */
     private $id;
 
@@ -29,7 +30,7 @@ class Milestone {
 
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="AMH\MyBlogBundle\Entity\User\User", fetch="EAGER", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="AMH\MyBlogBundle\Entity\User\User", fetch="EAGER", cascade={"persist", "remove"}, inversedBy="milestones")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;

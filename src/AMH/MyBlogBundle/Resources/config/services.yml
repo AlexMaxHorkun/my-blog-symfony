@@ -78,3 +78,10 @@ services:
         class: AMH\MyBlogBundle\Reward\RewardDelegate
         arguments:
             - ["@amh_my_blog.reward_double_rates", "@amh_my_blog.reward_increment_views"]
+
+    amh_my_blog.milstone_listener:
+        class: AMH\MyBlogBundle\Event\MilestoneEventListener
+        arguments:
+            - "@amh_my_blog.reward_delegate"
+        tags:
+            - { name: kernel.event_listener, event: amh_my_blog.milestone_achieved, method: onMilestoneAchieved }

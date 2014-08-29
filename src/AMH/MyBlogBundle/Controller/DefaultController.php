@@ -208,6 +208,7 @@ class DefaultController extends Controller
                 $viewedPostMilestone=new Milestone(Milestone::TYPE_POST_VIEWED, $user);
                 try{
                     $user->addMilestone($viewedPostMilestone);
+                    $entityManager->persist($viewedPostMilestone);
                     $entityManager->flush();
                     $eventDispatcher->dispatch(MilestoneEvent::EVENT_MILESTONE_ACHIVED,new MilestoneEvent($viewedPostMilestone));
                 }
@@ -228,6 +229,7 @@ class DefaultController extends Controller
                         $ratedPostMilestone=new Milestone(Milestone::TYPE_POST_RATED, $user);
                         try{
                             $user->addMilestone($ratedPostMilestone);
+                            $entityManager->persist($ratedPostMilestone);
                             $entityManager->flush();
                             $eventDispatcher->dispatch(MilestoneEvent::EVENT_MILESTONE_ACHIVED,new MilestoneEvent($ratedPostMilestone));
                         }

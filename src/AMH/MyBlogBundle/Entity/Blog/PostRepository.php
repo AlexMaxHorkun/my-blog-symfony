@@ -85,8 +85,8 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
         $qb=$this->createQueryBuilder('p');
         $qb->update('AMH\MyBlogBundle\Entity\Blog\Rate', 'r')->set('r.rating','r.rating*2');
         $qb2=$this->createQueryBuilder('p');
-        $qb2->select('p.id')->where($qb2->expr()->eq('user.id', $user->getId()));
-        $qb->where($qb->expr()->eq('r.post.id',$qb2->getDQL()));
+        $qb2->select('p.id')->where($qb2->expr()->eq('p.author', $user->getId()));
+        $qb->where($qb->expr()->in('r.post',$qb2->getDQL()));
         $qb->getQuery()->execute();
     }
 
@@ -96,7 +96,7 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
      */
     public function incrementViews(User $user){
         $qb=$this->createQueryBuilder('p');
-        $qb->update('p')->set('p.visits','p.visits+1')->where($qb->expr()->eq('p.user.id',$user->getId()));
+        $qb->update('AMH\MybLogBundle\Entity\Blog\Post', 'p')->set('p.visits','p.visits+1')->where($qb->expr()->eq('p.author',$user->getId()));
         $qb->getQuery()->execute();
     }
 }
