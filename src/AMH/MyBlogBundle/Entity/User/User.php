@@ -6,6 +6,7 @@ use AMH\MyBlogBundle\Entity\Blog\Rate;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection as Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
 @author Alexander Horkun mindkilleralexs@gmail.com
 
@@ -62,12 +63,19 @@ class User implements UserInterface, \Serializable{
 	@ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Rate", mappedBy="by", cascade={"persist", "remove"})
 	*/
 	protected $rates;
+
+    /**
+     * @var Collection
+     * @ORM\OneToMany(targetEntity="Milestone", mappedBy="user", fetch="LAZY")
+     */
+    protected $milestones;
 	
 	public function __construct(){
 		$this->posts=new Collection();
 		$this->roles=new Collection();
 		$this->postsVisited=new Collection();
 		$this->rates=new Collection();
+        $this->milestones=new Collection();
 	}
 
     /**
@@ -302,5 +310,33 @@ class User implements UserInterface, \Serializable{
     		}
     	}
     	return $rate;
+    }
+
+    /**
+     * @param Milestone $milestone
+     */
+    public function addMilestone(Milestone $milestone){
+        $this->milestones->add($milestone);
+    }
+
+    /**
+     * @return Milestone[]
+     */
+    public function getMilestones()
+    {
+        return $this->milestones->toArray();
+    }
+
+    /**
+     * @param string $type Milestone ID.
+     * @return bool
+     */
+    public function hasMilestone($type){
+        foreach($this->milestones as $m){
+            if($m->getType()==$type){
+                return true;
+            }
+        }
+        return false;
     }
 }

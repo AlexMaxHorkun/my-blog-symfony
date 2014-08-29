@@ -1,5 +1,7 @@
 <?php
 namespace AMH\MyBlogBundle\Entity\Blog;
+use AMH\MyBlogBundle\Entity\User\User;
+
 /**
 @author Alexander Horkun mindkilleralexs@gmail.com
 */
@@ -74,5 +76,28 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
 		$result=$query->getResult();
 		return $result;
 	}
+
+    /**
+     * @param User $user
+     * Doubles all user's posts' ratings.
+     */
+    public function doubleRates(User $user){
+        $qb=$this->createQueryBuilder('p');
+        $qb->update('AMH\MyBlogBundle\Entity\Blog\Rate', 'r')->set('r.rating','r.rating*2');
+        $qb2=$this->createQueryBuilder('p');
+        $qb2->select('p.id')->where($qb2->expr()->eq('user.id', $user->getId()));
+        $qb->where($qb->expr()->eq('r.post.id',$qb2->getDQL()));
+        $qb->getQuery()->execute();
+    }
+
+    /**
+     * @param User $user
+     * Increments the number of all user's posts' views.
+     */
+    public function incrementViews(User $user){
+        $qb=$this->createQueryBuilder('p');
+        $qb->update('p')->set('p.visits','p.visits+1')->where($qb->expr()->eq('p.user.id',$user->getId()));
+        $qb->getQuery()->execute();
+    }
 }
 ?>

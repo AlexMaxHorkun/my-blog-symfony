@@ -56,3 +56,25 @@ services:
                 - "@router"
             tags:
                 - { name: kernel.event_listener, event: kernel.request, method: onRequest }
+
+    amh_my_blog.post_repository:
+        class: AMH\MyBlogBundle\Entity\Blog\PostRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AMH\MyBlogBundle\Entity\Blog\Post
+
+    amh_my_blog.reward_double_rates:
+        class: AMH\MyBlogBundle\Reward\DoubleRatesReward
+        arguments:
+            - "@amh_my_blog.post_repository"
+
+    amh_my_blog.reward_increment_views:
+        class: AMH\MyBlogBundle\Reward\IncrementViewsReward
+        arguments:
+            - "@amh_my_blog.post_repository"
+
+    amh_my_blog.reward_delegate:
+        class: AMH\MyBlogBundle\Reward\RewardDelegate
+        arguments:
+            - ["@amh_my_blog.reward_double_rates", "@amh_my_blog.reward_increment_views"]

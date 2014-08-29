@@ -2,12 +2,16 @@
 
 namespace AMH\MyBlogBundle\Controller;
 
+use AMH\MyBlogBundle\Entity\User\Milestone;
+use AMH\MyBlogBundle\Event\MilestoneEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AMH\MyBlogBundle\Entity\User\User;
 use AMH\MyBlogBundle\Entity\Blog\Post;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 /**
 @author Alexander Horkun mindkilleralexs@gmail.com
 */
@@ -184,17 +188,34 @@ class DefaultController extends Controller
     }
     
     public function postViewAction($id){
+        /** @var EventDispatcherInterface $eventDispatcher */
+        $eventDispatcher=$this->get('event_dispatcher');
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager=$this->getDoctrine()->getEntityManager();
     	$ratingFormView=NULL;
     	$repo=$this->getDoctrine()->getManager()->getRepository('AMHMyBlogBundle:Blog\Post');
     	$post=$repo->find($id);
     	if(!$post){
     		return new Response(null,Response::HTTP_NOT_FOUND);
     	}
+        /** @var User $user */
     	$user=$this->getUser();
     	$rated=FALSE;
     	if($user){
     		$user=$this->getDoctrine()->getManager()->merge($user);
     		$post->addVisitor($user);
+            if(!$user->hasMilestone(Milestone::TYPE_POST_VIEWED)){
+                $viewedPostMilestone=new Milestone(Milestone::TYPE_POST_VIEWED, $user);
+                try{
+                    $user->addMilestone($viewedPostMilestone);
+                    $entityManager->flush();
+                    $eventDispatcher->dispatch(MilestoneEvent::EVENT_MILESTONE_ACHIVED,new MilestoneEvent($viewedPostMilestone));
+                }
+                catch(\Exception $ex){
+                    //user already has this milestone or smth else
+                }
+                unset($viewedPostMilestone);
+            }
     		$rated=$user->postRate($post);
     		if(!$rated){
     			$ratingForm=$this->createForm('post_rating');
@@ -203,6 +224,18 @@ class DefaultController extends Controller
 				if($ratingForm->isSubmitted() && $ratingForm->isValid()){
 					$user->ratePost($post,$ratingForm->get('rating')->getData());
 					$rated=$ratingForm->get('rating')->getData();
+                    if(!$user->hasMilestone(Milestone::TYPE_POST_RATED)){
+                        $ratedPostMilestone=new Milestone(Milestone::TYPE_POST_RATED, $user);
+                        try{
+                            $user->addMilestone($ratedPostMilestone);
+                            $entityManager->flush();
+                            $eventDispatcher->dispatch(MilestoneEvent::EVENT_MILESTONE_ACHIVED,new MilestoneEvent($ratedPostMilestone));
+                        }
+                        catch(\Exception $ex){
+                            //user already has this milestone or smth else
+                        }
+                        unset($ratedPostMilestone);
+                    }
 				}
 				$ratingFormView=$ratingForm->createView();
 			}
