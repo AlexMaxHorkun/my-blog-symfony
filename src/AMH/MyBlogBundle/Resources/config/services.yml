@@ -85,3 +85,21 @@ services:
             - "@amh_my_blog.reward_delegate"
         tags:
             - { name: kernel.event_listener, event: amh_my_blog.milestone_achieved, method: onMilestoneAchieved }
+
+    amh_my_blog.user_info_repository:
+        class: AMH\MyBlogBundle\Entry\UserInfoRedisRepository
+        arguments:
+            - "@snc_redis.default"
+
+    amh_my_blog.user_repository:
+        class: AMH\MyBlogBundle\Entity\User\UserRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AMH\MyBlogBundle\Entity\User\User
+
+    amh_my_blog.user_info_service:
+        class: AMH\MyBlogBundle\Service\UserInfoService
+        arguments:
+            - "@amh_my_blog.user_info_repository"
+            - "@amh_my_blog.user_repository"

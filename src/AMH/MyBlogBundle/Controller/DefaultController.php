@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use AMH\MyBlogBundle\Service\UserInfoService;
+use AMH\MyBlogBundle\Entity\User\UserRepository;
 
 /**
 @author Alexander Horkun mindkilleralexs@gmail.com
@@ -173,13 +175,15 @@ class DefaultController extends Controller
     	$userInfo=array();
     	$user=$this->getUser();
     	if($user){
-    		$userInfo['id']=$user->getId();
-    		$userInfo['name']=$user->getName();
-    		$userInfo['email']=$user->getEmail();
-    		$userInfo['posts_count']=count($user->getPosts());
-    		$userInfo['visited_count']=count($user->getVisitedPosts());
-    		$userInfo['rated_count']=count($user->getRates());
-    		//$repo=$this->getDoctrine()->getManager()->getRepository('AMHMyBlogBundle:User\User');
+            /** @var UserInfoService $userInfoService */
+            $userInfoService=$this->get('amh_my_blog.user_info_service');
+            $userInfoEntry=$userInfoService->find($user);
+    		$userInfo['id']=$userInfoEntry->getId();
+    		$userInfo['name']=$userInfoEntry->getName();
+    		$userInfo['email']=$userInfoEntry->getEmail();
+    		$userInfo['posts_count']=$userInfoEntry->getPostsCount();
+    		$userInfo['visited_count']=$userInfoEntry->getVisitedCount();
+    		$userInfo['rated_count']=$userInfoEntry->getRatedCount();
     	}
     	return $this->render(
     		'AMHMyBlogBundle:Default:user-info-block.html.twig',
@@ -191,9 +195,14 @@ class DefaultController extends Controller
         /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher=$this->get('event_dispatcher');
         /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager=$this->getDoctrine()->getEntityManager();
+        $entityManager=$this->getDoctrine()->getManager();
+        /** @var UserInfoService $userInfoService */
+        $userInfoService=$this->get('amh_my_blog.user_info_service');
+        /** @var UserRepository $userRepo */
+        $userRepo=$this->getDoctrine()->getManager()->getRepository('AMHMyBlogBundle:User\User');
     	$ratingFormView=NULL;
     	$repo=$this->getDoctrine()->getManager()->getRepository('AMHMyBlogBundle:Blog\Post');
+        /** @var \AMH\MyBlogBundle\Entity\Blog\Post $post */
     	$post=$repo->find($id);
     	if(!$post){
     		return new Response(null,Response::HTTP_NOT_FOUND);
@@ -203,6 +212,9 @@ class DefaultController extends Controller
     	$rated=FALSE;
     	if($user){
     		$user=$this->getDoctrine()->getManager()->merge($user);
+            if(!$userRepo->hasVisited($user, $post)){
+                $userInfoService->incrVisitedCount($user);
+            }
     		$post->addVisitor($user);
             if(!$user->hasMilestone(Milestone::TYPE_POST_VIEWED)){
                 $viewedPostMilestone=new Milestone(Milestone::TYPE_POST_VIEWED, $user);
@@ -238,6 +250,7 @@ class DefaultController extends Controller
                         }
                         unset($ratedPostMilestone);
                     }
+                    $userInfoService->incrRatedCount($user);
 				}
 				$ratingFormView=$ratingForm->createView();
 			}

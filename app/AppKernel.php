@@ -21,6 +21,7 @@ class AppKernel extends Kernel
    			new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
     		new JMS\DiExtraBundle\JMSDiExtraBundle($this),
     		new IAkumaI\SphinxsearchBundle\SphinxsearchBundle($this),
+            new \Snc\RedisBundle\SncRedisBundle($this),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

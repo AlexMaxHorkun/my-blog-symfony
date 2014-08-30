@@ -14,3 +14,4 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
     domain: example.com
+    redis_dns: "redis://example"

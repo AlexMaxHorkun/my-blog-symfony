@@ -85,3 +85,10 @@ sphinxsearch:
         port: 3306
     indexes:
         amhmyblog_posts: 'AMHMyBlogBundle:Blog/Post'
+
+snc_redis:
+    clients:
+        default:
+            type: predis
+            alias: default
+            dsn: "%redis_dns%"
