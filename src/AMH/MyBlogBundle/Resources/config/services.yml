@@ -46,16 +46,16 @@ services:
         factory_method: createDoctrineCache
         arguments: [ "@amh_my_blog_cache" ]
 
-    amh_my_blog.geo_detector:
-        class: AMH\MyBlogBundle\Util\GeoDetector
-        
-    kernel.listener.geo_subdomain_listener:
-            class: AMH\MyBlogBundle\Event\GeoSubdomainEventListener
-            arguments:
-                - "@amh_my_blog.geo_detector"
-                - "@router"
-            tags:
-                - { name: kernel.event_listener, event: kernel.request, method: onRequest }
+#    amh_my_blog.geo_detector:
+#        class: AMH\MyBlogBundle\Util\GeoDetector
+#
+#    kernel.listener.geo_subdomain_listener:
+#            class: AMH\MyBlogBundle\Event\GeoSubdomainEventListener
+#            arguments:
+#                - "@amh_my_blog.geo_detector"
+#                - "@router"
+#            tags:
+#                - { name: kernel.event_listener, event: kernel.request, method: onRequest }
 
     amh_my_blog.post_repository:
         class: AMH\MyBlogBundle\Entity\Blog\PostRepository

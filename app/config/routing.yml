@@ -1,13 +1,11 @@
 amh_my_blog:
     resource: "@AMHMyBlogBundle/Resources/config/routing.yml"
     prefix:   /
-    host: "{_geo}.{domain}"
+    host: "{domain}"
     defaults:
         domain: "%domain%"
-        _geo: "%locale%"
     requirements:
         domain: "%domain%"
-        _geo: "[a-z]{2}"
 
 login:
  path: /login
