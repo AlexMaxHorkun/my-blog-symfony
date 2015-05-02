@@ -220,6 +220,7 @@ class DefaultController extends Controller
         /** @var UserRepository $userRepo */
         $userRepo = $this->getDoctrine()->getManager()->getRepository('AMHMyBlogBundle:User\User');
         $ratingFormView = null;
+        /** @var \AMH\MyBlogBundle\Entity\Blog\PostRepository $repo */
         $repo = $this->getDoctrine()->getManager()->getRepository('AMHMyBlogBundle:Blog\Post');
         /** @var \AMH\MyBlogBundle\Entity\Blog\Post $post */
         $post = $repo->find($id);
@@ -229,7 +230,7 @@ class DefaultController extends Controller
         /** @var User $user */
         $user = $this->getUser();
         $rated = false;
-        if ($user) {
+        if ($user && $user->getId() != $post->getAuthor()->getId()) {
             $user = $this->getDoctrine()->getManager()->merge($user);
             if (!$userRepo->hasVisited($user, $post)) {
                 $userInfoService->incrVisitedCount($user);
