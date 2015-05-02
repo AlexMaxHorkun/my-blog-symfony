@@ -318,6 +318,9 @@ class DefaultController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($post);
             $em->flush();
+            /** @var UserInfoService $userInfoService */
+            $userInfoService = $this->get('amh_my_blog.user_info_service');
+            $userInfoService->delete($user);
 
             return $this->redirect($this->generateUrl('amh_my_blog_post', array('id' => $post->getId())));
         }
