@@ -6,7 +6,8 @@ namespace AMH\MyBlogBundle\Entry;
  *
  * @author Alexander Horkun mindkilleralexs@gmail.com
  */
-interface UserInfoRepositoryInterface {
+interface UserInfoRepositoryInterface
+{
     /**
      * @param int $id
      * @return UserInfo

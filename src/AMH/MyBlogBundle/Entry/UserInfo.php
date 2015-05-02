@@ -6,7 +6,8 @@ namespace AMH\MyBlogBundle\Entry;
  *
  * @author Alexander Horkun mindkilleralexs@gmail.com
  */
-class UserInfo {
+class UserInfo
+{
     /**
      * @var int
      */
