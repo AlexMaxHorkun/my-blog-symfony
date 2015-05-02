@@ -1,69 +1,58 @@
 <?php
 namespace AMH\MyBlogBundle\Entity\User;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection as Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\Role\RoleInterface;
-/**
-@author Alexander Horkun mindkilleralexs@gmail.com
 
-@ORM\Entity
-*/
-class Role implements RoleInterface{
-	/**
-	@var int
-	
-	@ORM\Id
-	@ORM\Column(type="integer")
-	@ORM\GeneratedValue(strategy="AUTO")
-	*/
-	protected $id;
-	/**
-	@var string
-	
-	@ORM\Column(type="string", unique=true)
-	*/
-	protected $role;
-	/**
-	@var Collection
-	
-	@ORM\ManyToMany(targetEntity="User", mappedBy="roles")
-	@ORM\JoinTable(name="user_role")
-	*/
-	protected $users;
-	/**
-	@param string|null $r Role.
-	*/
-	public function __construct($r=NULL){
-		$this->users=new Collection();
-		if($r) $this->setRole($r);
-	}
-	
-	public function getRole(){
-		return $this->role;
-	}
+/**
+ * @author Alexander Gorkun mindkilleralexs@gmail.com
+ *
+ * @ORM\Entity
+ */
+class Role implements RoleInterface
+{
+    /**
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", unique=true)
+     */
+    protected $role;
+    /**
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="roles")
+     * @ORM\JoinTable(name="user_role")
+     */
+    protected $users;
+
+    /**
+     * @param string|null $r Role.
+     */
+    public function __construct($r = null)
+    {
+        $this->users = new Collection();
+        if ($r) {
+            $this->setRole($r);
+        }
+    }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set role
-     *
-     * @param string $role
-     * @return Role
-     */
-    public function setRole($role)
-    {
-        $this->role = $role;
-
-        return $this;
     }
 
     /**
@@ -92,22 +81,43 @@ class Role implements RoleInterface{
     /**
      * Get users
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUsers()
     {
         return $this->users;
     }
-    
-    public function __toString(){
-    	return $this->getRole();
+
+    public function __toString()
+    {
+        return $this->getRole();
     }
-    
-    public function serialize(){
-    	return serialize(array($this->id,$this->role));
+
+    public function getRole()
+    {
+        return $this->role;
     }
-    
-    public function unserialize($data){
-    	list($this->id,$this->role)=unserialize($data);
+
+    /**
+     * Set role
+     *
+     * @param string $role
+     * @return Role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function serialize()
+    {
+        return serialize(array($this->id, $this->role));
+    }
+
+    public function unserialize($data)
+    {
+        list($this->id, $this->role) = unserialize($data);
     }
 }

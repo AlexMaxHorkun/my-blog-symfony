@@ -8,11 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @package AMH\MyBlogBundle\Entity\User
  * @author Alexander Horkun mindkilleralexs@gmail.com
  * @ORM\Entity
- * @ORM\Table(name="Milestone", uniqueConstraints={@ORM\UniqueConstraint(columns={"user", "type"})})
+ * @ORM\Table(name="UsersMilestone", uniqueConstraints={@ORM\UniqueConstraint(columns={"user_id", "type"})})
  */
-class Milestone {
-    const TYPE_POST_RATED="POST_RATED";
-    const TYPE_POST_VIEWED="POST_VIEWED";
+class Milestone
+{
+    const TYPE_POST_RATED = "POST_RATED";
+    const TYPE_POST_VIEWED = "POST_VIEWED";
 
     /**
      * @var int
@@ -20,47 +21,40 @@ class Milestone {
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer", name="id")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string Milestone ID.
      * @ORM\Column(name="type", type="string", length=64, nullable=false)
      */
-    private $type;
+    protected $type;
 
     /**
      * @var User
      * @ORM\ManyToOne(targetEntity="AMH\MyBlogBundle\Entity\User\User", fetch="EAGER", cascade={"persist", "remove"}, inversedBy="milestones")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $user;
+    protected $user;
 
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", name="time", nullable=false)
      */
-    private $time;
+    protected $time;
 
     /**
      * @param string $type
      * @param User $u
      */
-    public function  __construct($type, User $u){
-        if($type){
+    public function  __construct($type, User $u)
+    {
+        if ($type) {
             $this->setType($type);
         }
-        if($u){
+        if ($u) {
             $this->setUser($u);
         }
-        $this->time=new \DateTime();
-    }
-
-    /**
-     * @param \DateTime $time
-     */
-    public function setTime(\DateTime $time)
-    {
-        $this->time = $time;
+        $this->time = new \DateTime();
     }
 
     /**
@@ -72,11 +66,11 @@ class Milestone {
     }
 
     /**
-     * @param string $type
+     * @param \DateTime $time
      */
-    public function setType($type)
+    public function setTime(\DateTime $time)
     {
-        $this->type = $type;
+        $this->time = $time;
     }
 
     /**
@@ -88,11 +82,11 @@ class Milestone {
     }
 
     /**
-     * @param \AMH\MyBlogBundle\Entity\User\User $user
+     * @param string $type
      */
-    public function setUser(User $user)
+    public function setType($type)
     {
-        $this->user = $user;
+        $this->type = $type;
     }
 
     /**
@@ -101,6 +95,14 @@ class Milestone {
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param \AMH\MyBlogBundle\Entity\User\User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

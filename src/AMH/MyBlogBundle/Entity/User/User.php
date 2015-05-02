@@ -3,80 +3,82 @@ namespace AMH\MyBlogBundle\Entity\User;
 
 use AMH\MyBlogBundle\Entity\Blog\Post;
 use AMH\MyBlogBundle\Entity\Blog\Rate;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection as Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
-@author Alexander Horkun mindkilleralexs@gmail.com
-
-@ORM\Entity(repositoryClass="AMH\MyBlogBundle\Entity\User\UserRepository")
-*/
-class User implements UserInterface, \Serializable{
-	/**
-	@var int
-	
-	@ORM\Id
-	@ORM\Column(type="integer")
-	@ORM\GeneratedValue(strategy="AUTO")
-	*/
-	protected $id;
-	/**
-	@var string Email.
-	
-	@ORM\Column(type="string", unique=true)
-	*/
-	protected $email;
-	/**
-	@var string
-	
-	@ORM\Column(type="string", unique=true)
-	*/
-	protected $name;
-	/**
-	@var string
-	
-	@ORM\Column(type="string")
-	*/
-	protected $password;
-	/**
-	@var Collection
-	
-	@ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\User\Role", inversedBy="users")
-	*/
-	protected $roles;
-	/**
-	@var Collection
-	
-	@ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Post", mappedBy="author")
-	*/
-	protected $posts;
-	/**
-	@var Collection
-	
-	@ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Post", mappedBy="visitors")
-	*/
-	protected $postsVisited;
-	/**
-	@var Collection
-	
-	@ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Rate", mappedBy="by", cascade={"persist", "remove"})
-	*/
-	protected $rates;
+ * @author Alexander Horkun mindkilleralexs@gmail.com
+ *
+ * @ORM\Entity(repositoryClass="AMH\MyBlogBundle\Entity\User\UserRepository")
+ */
+class User implements UserInterface, \Serializable
+{
+    /**
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+    /**
+     * @var string Email.
+     *
+     * @ORM\Column(type="string", unique=true)
+     */
+    protected $email;
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", unique=true)
+     */
+    protected $name;
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $password;
+    /**
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\User\Role", inversedBy="users")
+     */
+    protected $roles;
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Post", mappedBy="author")
+     */
+    protected $posts;
+    /**
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Post", mappedBy="visitors")
+     */
+    protected $postsVisited;
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Rate", mappedBy="by", cascade={"persist", "remove"})
+     */
+    protected $rates;
 
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="Milestone", mappedBy="user", fetch="LAZY")
+     * @ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\User\Milestone", mappedBy="user_id", fetch="LAZY")
      */
     protected $milestones;
-	
-	public function __construct(){
-		$this->posts=new Collection();
-		$this->roles=new Collection();
-		$this->postsVisited=new Collection();
-		$this->rates=new Collection();
-        $this->milestones=new Collection();
-	}
+
+    public function __construct()
+    {
+        $this->posts = new Collection();
+        $this->roles = new Collection();
+        $this->postsVisited = new Collection();
+        $this->rates = new Collection();
+        $this->milestones = new Collection();
+    }
 
     /**
      * Add posts
@@ -104,11 +106,21 @@ class User implements UserInterface, \Serializable{
     /**
      * Get posts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPosts()
     {
         return $this->posts->toArray();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -125,21 +137,13 @@ class User implements UserInterface, \Serializable{
     }
 
     /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-    /**
      * @inheritDoc
      */
     public function getUsername()
     {
         return $this->email;
     }
+
     /**
      * @inheritDoc
      */
@@ -157,19 +161,46 @@ class User implements UserInterface, \Serializable{
     }
 
     /**
+     * Set password
+     *
+     * @param string $password
+     * @return User
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getRoles()
     {
-       $roles=$this->roles->toArray();
-       if(!$roles) $roles=array(new Role('ROLE_USER'));
-       return $roles;
+        $roles = $this->roles->toArray();
+        if (!$roles) {
+            $roles = array(new Role('ROLE_USER'));
+        }
+
+        return $roles;
     }
+
     /**
      * @inheritDoc
      */
     public function eraseCredentials()
     {
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     /**
@@ -181,52 +212,6 @@ class User implements UserInterface, \Serializable{
     public function setEmail($email)
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string 
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return User
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     * @return User
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
 
         return $this;
     }
@@ -253,69 +238,108 @@ class User implements UserInterface, \Serializable{
     {
         $this->roles->removeElement($roles);
     }
-    
-    public function serialize(){
-    	return serialize(array($this->id,$this->email,$this->name,$this->password));
+
+    public function serialize()
+    {
+        return serialize(array($this->id, $this->email, $this->name, $this->password));
     }
-    
-    public function unserialize($data){
-    	list($this->id,$this->email,$this->name,$this->password)=unserialize($data);
+
+    public function unserialize($data)
+    {
+        list($this->id, $this->email, $this->name, $this->password) = unserialize($data);
     }
-    
-    public function __toString(){
-    	return $this->getName();
+
+    public function __toString()
+    {
+        return $this->getName();
     }
+
     /**
-    @return array of Post.
-    */
-    public function getVisitedPosts(){
-    	return $this->postsVisited->toArray();
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
-    
-    public function addVisitedPost(Post $p){
-    	$this->postsVisited[]=$p;
-    }
+
     /**
-    @return array of Rate.
-    */
-    public function getRates(){
-    	return $this->rates->toArray();
+     * Set name
+     *
+     * @param string $name
+     * @return User
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
     }
+
     /**
-    @param float $r Rating.
-    
-    @return Rate
-    */
-    public function ratePost(Post $p,$r){
-    	$rate=new Rate((float)$r,$this,$p);
-    	$this->rates[]=$rate;
-    	return $rate;
+     * @return array of Post.
+     */
+    public function getVisitedPosts()
+    {
+        return $this->postsVisited->toArray();
     }
-    
-    public function addRate(Rate $r){
-    	if(!$r->getBy()===$this){
-    		throw new \InvalidArgumentException('Rate given is rated by another user');
-    	}
-    	$this->rates[]=$r;
+
+    public function addVisitedPost(Post $p)
+    {
+        $this->postsVisited[] = $p;
     }
+
     /**
-    @return Rate|null Rate object or null if user haven't already rated given post.
-    */
-    public function postRate(Post $p){
-    	$rate=NULL;
-    	foreach($this->rates as $r){
-    		if($r->getPost()===$p && $r->getBy()===$this){
-    			$rate=$r;
-    			break;
-    		}
-    	}
-    	return $rate;
+     * @return array of Rate.
+     */
+    public function getRates()
+    {
+        return $this->rates->toArray();
+    }
+
+    /**
+     * @param float $r Rating.
+     *
+     * @return Rate
+     */
+    public function ratePost(Post $p, $r)
+    {
+        $rate = new Rate((float)$r, $this, $p);
+        $this->rates[] = $rate;
+
+        return $rate;
+    }
+
+    public function addRate(Rate $r)
+    {
+        if (!$r->getBy() === $this) {
+            throw new \InvalidArgumentException('Rate given is rated by another user');
+        }
+        $this->rates[] = $r;
+    }
+
+    /**
+     * @return Rate|null Rate object or null if user haven't already rated given post.
+     */
+    public function postRate(Post $p)
+    {
+        $rate = null;
+        foreach ($this->rates as $r) {
+            if ($r->getPost() === $p && $r->getBy() === $this) {
+                $rate = $r;
+                break;
+            }
+        }
+
+        return $rate;
     }
 
     /**
      * @param Milestone $milestone
      */
-    public function addMilestone(Milestone $milestone){
+    public function addMilestone(Milestone $milestone)
+    {
         $this->milestones->add($milestone);
     }
 
@@ -331,12 +355,14 @@ class User implements UserInterface, \Serializable{
      * @param string $type Milestone ID.
      * @return bool
      */
-    public function hasMilestone($type){
-        foreach($this->milestones as $m){
-            if($m->getType()==$type){
+    public function hasMilestone($type)
+    {
+        foreach ($this->milestones as $m) {
+            if ($m->getType() == $type) {
                 return true;
             }
         }
+
         return false;
     }
 }

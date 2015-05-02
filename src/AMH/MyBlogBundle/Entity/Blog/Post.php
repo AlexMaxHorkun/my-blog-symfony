@@ -2,79 +2,95 @@
 namespace AMH\MyBlogBundle\Entity\Blog;
 
 use AMH\MyBlogBundle\Entity\User\User;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection as Collection;
-/**
-@author Alexander Horkun mindkilleralexs@gmail.com
+use Doctrine\ORM\Mapping as ORM;
 
-@ORM\Entity(repositoryClass="AMH\MyBlogBundle\Entity\Blog\PostRepository")
-@ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="unique_post", columns={"title","author_id"})})
-*/
-class Post{
-	/**
-	@var int
-	
-	@ORM\Id
-	@ORM\Column(type="integer")
-	@ORM\GeneratedValue(strategy="AUTO")
-	*/
-	protected $id;
-	/**
-	@var string
-	
-	@ORM\Column(type="string", length=50)
-	*/
-	protected $title="";
-	/**
-	@var string
-	
-	@ORM\Column(type="text", length=2500)
-	*/
-	protected $text="";
-	/**
-	@var User
-	
-	@ORM\ManyToOne(targetEntity="AMH\MyBlogBundle\Entity\User\User", inversedBy="posts")
-	@ORM\JoinColumn(name="author_id")
-	*/
-	protected $author=NULL;
-	/**
-	@var \DateTime
-	
-	@ORM\Column(type="datetime")
-	*/
-	protected $createdTime;
-	/**
-	@var Collection of User.
-	
-	@ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\User\User", inversedBy="postsVisited")
-	*/
-	protected $visitors;
-	/**
-	I should have created a class Visitation with date, user and post fields, but for simplicity lets leave it like it is.
-	
-	@var int Visits.
-	
-	@ORM\Column(type="integer")
-	*/
-	protected $visits=0;
-	/**
-	@var Collection of Rate.
-	
-	@ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Rate", mappedBy="post")
-	*/
-	protected $rates;
-	/**
-	@param string|null $tt Subject.
-	@param string|null $t Text.
-	@param User|null $u Author.
-	*/
-	public function __construct($tt=NULL,$t=NULL,User $u=NULL){
-		$this->visitors=new Collection();
-		$this->rates=new Collection();
-		$this->createdTime=new \DateTime();
-		if($tt) $this->setTitle($tt);
-	}
+/**
+ * @author Alexander Horkun mindkilleralexs@gmail.com
+ *
+ * @ORM\Entity(repositoryClass="AMH\MyBlogBundle\Entity\Blog\PostRepository")
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="unique_post", columns={"title","author_id"})})
+ */
+class Post
+{
+    /**
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=50)
+     */
+    protected $title = "";
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", length=2500)
+     */
+    protected $text = "";
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AMH\MyBlogBundle\Entity\User\User", inversedBy="posts")
+     * @ORM\JoinColumn(name="author_id")
+     */
+    protected $author = null;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdTime;
+    /**
+     * @var Collection of User.
+     *
+     * @ORM\ManyToMany(targetEntity="AMH\MyBlogBundle\Entity\User\User", inversedBy="postsVisited")
+     */
+    protected $visitors;
+    /**
+     * I should have created a class Visitation with date, user and post fields, but for simplicity lets leave it like it is.
+     *
+     * @var int Visits.
+     *
+     * @ORM\Column(type="integer")
+     */
+    protected $visits = 0;
+    /**
+     * @var Collection of Rate.
+     *
+     * @ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\Blog\Rate", mappedBy="post")
+     */
+    protected $rates;
+
+    /**
+     * @param string|null $tt Subject.
+     * @param string|null $t Text.
+     * @param User|null $u Author.
+     */
+    public function __construct($tt = null, $t = null, User $u = null)
+    {
+        $this->visitors = new Collection();
+        $this->rates = new Collection();
+        $this->createdTime = new \DateTime();
+        if ($tt) {
+            $this->setTitle($tt);
+        }
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 
     /**
      * Set title
@@ -90,13 +106,13 @@ class Post{
     }
 
     /**
-     * Get title
+     * Get text
      *
-     * @return string 
+     * @return string
      */
-    public function getTitle()
+    public function getText()
     {
-        return $this->title;
+        return $this->text;
     }
 
     /**
@@ -113,13 +129,13 @@ class Post{
     }
 
     /**
-     * Get text
+     * Get author
      *
-     * @return string 
+     * @return \AMH\MyBlogBundle\Entity\user\User
      */
-    public function getText()
+    public function getAuthor()
     {
-        return $this->text;
+        return $this->author;
     }
 
     /**
@@ -136,13 +152,13 @@ class Post{
     }
 
     /**
-     * Get author
+     * Get id
      *
-     * @return \AMH\MyBlogBundle\Entity\user\User 
+     * @return integer
      */
-    public function getAuthor()
+    public function getId()
     {
-        return $this->author;
+        return $this->id;
     }
 
     /**
@@ -159,60 +175,63 @@ class Post{
     }
 
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return array of User.
      */
-    public function getId()
+    public function getVisitors()
     {
-        return $this->id;
+        return $this->visitors->toArray();
     }
+
+    public function addVisitor(User $u)
+    {
+        if (!$this->visitors->contains($u)) {
+            $this->visitors[] = $u;
+        }
+        $this->visits++;
+    }
+
     /**
-    @return array of User.
-    */
-    public function getVisitors(){
-    	return $this->visitors->toArray();
+     * @return array of Rate.
+     */
+    public function getRates()
+    {
+        return $this->rates->toArray();
     }
-    
-    public function addVisitor(User $u){
-    	if(!$this->visitors->contains($u)){
-    		$this->visitors[]=$u;
-    	}
-    	$this->visits++;
+
+    public function addRate(Rate $r)
+    {
+        $this->rates[] = $r;
     }
+
     /**
-    @return array of Rate.
-    */
-    public function getRates(){
-    	return $this->rates->toArray();
+     * @return int
+     */
+    public function getVisits()
+    {
+        return $this->visits;
     }
-    
-    public function addRate(Rate $r){
-    	$this->rates[]=$r;
-    }
+
     /**
-    @return int
-    */
-    public function getVisits(){
-    	return $this->visits;
+     * @param int
+     */
+    public function setVisits($c)
+    {
+        if ($c < 0) {
+            throw new \InvalidArgumentException('Visits count cannot be less then zero');
+        }
+        $this->visits = (int)$c;
     }
-    
-    public function addVisit(){
-    	++$this->visits;
+
+    public function addVisit()
+    {
+        ++$this->visits;
     }
+
     /**
-    @param int
-    */
-    public function setVisits($c){
-    	if($c<0){
-    		throw new \InvalidArgumentException('Visits count cannot be less then zero');
-    	}
-    	$this->visits=(int)$c;
-    }
-    /**
-    @return \DateTime
-    */
-    public function createdTime(){
-    	return $this->createdTime;
+     * @return \DateTime
+     */
+    public function createdTime()
+    {
+        return $this->createdTime;
     }
 }
