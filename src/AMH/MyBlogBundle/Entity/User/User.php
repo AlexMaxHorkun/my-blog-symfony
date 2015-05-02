@@ -67,7 +67,7 @@ class User implements UserInterface, \Serializable
 
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\User\Milestone", mappedBy="user_id", fetch="LAZY")
+     * @ORM\OneToMany(targetEntity="AMH\MyBlogBundle\Entity\User\Milestone", mappedBy="user", fetch="LAZY")
      */
     protected $milestones;
 
